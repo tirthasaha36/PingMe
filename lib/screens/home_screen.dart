@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<String> _filters = ['All', 'Unread', 'Groups', 'Favorites'];
 
   int _currentNavIndex = 0;
+  late final PageController _pageController;
 
   late List<ChatSummary> _allChats;
   List<ChatSummary> _filteredChats = [];
@@ -26,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _pageController = PageController(initialPage: _currentNavIndex);
     _allChats = ChatSummary.getSampleChats();
     _filteredChats = _allChats;
 
@@ -36,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    _pageController.dispose();
     _searchController.dispose();
     _searchFocusNode.dispose();
     super.dispose();
@@ -171,21 +174,43 @@ class _HomeScreenState extends State<HomeScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                _getHeaderTitle(),
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w800,
-                                  color: colors.textPrimary,
-                                  letterSpacing: -0.5,
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 260),
+                                transitionBuilder: (child, animation) => FadeTransition(
+                                  opacity: animation,
+                                  child: SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(0, 0.2),
+                                      end: Offset.zero,
+                                    ).animate(animation),
+                                    child: child,
+                                  ),
+                                ),
+                                child: Text(
+                                  _getHeaderTitle(),
+                                  key: ValueKey<String>(_getHeaderTitle()),
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w800,
+                                    color: colors.textPrimary,
+                                    letterSpacing: -0.5,
+                                  ),
                                 ),
                               ),
-                              Text(
-                                _getHeaderSubtitle(),
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: colors.textSecondary,
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 260),
+                                transitionBuilder: (child, animation) => FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                ),
+                                child: Text(
+                                  _getHeaderSubtitle(),
+                                  key: ValueKey<String>(_getHeaderSubtitle()),
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: colors.textSecondary,
+                                  ),
                                 ),
                               ),
                             ],
@@ -701,9 +726,9 @@ class _HomeScreenState extends State<HomeScreen> {
   String _getHeaderTitle() {
     switch (_currentNavIndex) {
       case 1:
-        return 'Connections';
-      case 2:
         return 'Updates';
+      case 2:
+        return 'Connections';
       case 3:
         return 'Calls';
       default:
@@ -714,9 +739,9 @@ class _HomeScreenState extends State<HomeScreen> {
   String _getHeaderSubtitle() {
     switch (_currentNavIndex) {
       case 1:
-        return 'People & Contacts';
-      case 2:
         return 'Status & Channels';
+      case 2:
+        return 'People & Contacts';
       case 3:
         return 'Recent Call Logs';
       default:
@@ -729,18 +754,21 @@ class _HomeScreenState extends State<HomeScreen> {
   // ═════════════════════════════════════════════════════════════════
 
   Widget _buildActiveTabBody(PingMeThemeColors colors) {
-    switch (_currentNavIndex) {
-      case 0:
-        return _buildChatsTab(colors);
-      case 1:
-        return _buildConnectionsTab(colors);
-      case 2:
-        return _buildUpdatesTab(colors);
-      case 3:
-        return _buildCallsTab(colors);
-      default:
-        return _buildChatsTab(colors);
-    }
+    return PageView(
+      controller: _pageController,
+      physics: const BouncingScrollPhysics(),
+      onPageChanged: (index) {
+        setState(() {
+          _currentNavIndex = index;
+        });
+      },
+      children: [
+        _buildChatsTab(colors),
+        _buildUpdatesTab(colors),
+        _buildConnectionsTab(colors),
+        _buildCallsTab(colors),
+      ],
+    );
   }
 
   /// Tab 0: Chats (Chat List)
@@ -1314,15 +1342,15 @@ class _HomeScreenState extends State<HomeScreen> {
         'badge': _allChats.where((c) => c.unreadCount > 0).length,
       },
       {
-        'label': 'Connections',
-        'icon': Icons.people_alt_rounded,
-        'outlineIcon': Icons.people_alt_outlined,
-        'badge': 0,
-      },
-      {
         'label': 'Updates',
         'icon': Icons.circle_notifications_rounded,
         'outlineIcon': Icons.circle_notifications_outlined,
+        'badge': 0,
+      },
+      {
+        'label': 'Connections',
+        'icon': Icons.people_alt_rounded,
+        'outlineIcon': Icons.people_alt_outlined,
         'badge': 0,
       },
       {
@@ -1367,9 +1395,17 @@ class _HomeScreenState extends State<HomeScreen> {
           return Expanded(
             child: InkWell(
               onTap: () {
-                setState(() {
-                  _currentNavIndex = index;
-                });
+                if (_pageController.hasClients) {
+                  _pageController.animateToPage(
+                    index,
+                    duration: const Duration(milliseconds: 320),
+                    curve: Curves.easeInOutCubic,
+                  );
+                } else {
+                  setState(() {
+                    _currentNavIndex = index;
+                  });
+                }
               },
               borderRadius: BorderRadius.circular(16),
               child: Container(
