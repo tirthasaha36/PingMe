@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/chat_model.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_theme.dart';
 import 'chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -68,20 +69,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = PingMeThemeColors.of(context);
+    final isDark = colors.isDark;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: colors.background,
       body: SafeArea(
         child: Column(
           children: [
-            // Top White Header Area
+            // Top Header Area
             Container(
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: colors.surface,
                 borderRadius: const BorderRadius.vertical(
                   bottom: Radius.circular(28),
                 ),
-                border: Border.all(color: AppColors.border, width: 1),
-                boxShadow: AppColors.softCardShadow,
+                border: Border.all(color: colors.border, width: 1),
+                boxShadow: isDark
+                    ? []
+                    : [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.04),
+                          blurRadius: 16,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
               ),
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
               child: Column(
@@ -102,8 +114,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: 44,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  gradient: AppColors.brandGradient,
-                                  border: Border.all(color: Colors.white, width: 2),
+                                  gradient: isDark
+                                      ? const LinearGradient(
+                                          colors: [
+                                            Color(0xFF29402A),
+                                            Color(0xFF3A2945),
+                                            Color(0xFF3F293B),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        )
+                                      : AppColors.brandGradient,
+                                  border: Border.all(
+                                    color: isDark
+                                        ? AppColors.darkSurface
+                                        : Colors.white,
+                                    width: 2,
+                                  ),
                                 ),
                                 child: Center(
                                   child: Text(
@@ -111,7 +138,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: GoogleFonts.plusJakartaSans(
                                       fontWeight: FontWeight.w700,
                                       fontSize: 14,
-                                      color: AppColors.textPrimary,
+                                      color: isDark
+                                          ? AppColors.darkTextPrimary
+                                          : AppColors.textPrimary,
                                     ),
                                   ),
                                 ),
@@ -124,8 +153,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   height: 12,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: AppColors.onlineDot,
-                                    border: Border.all(color: Colors.white, width: 2),
+                                    color: colors.onlineDot,
+                                    border: Border.all(
+                                      color: isDark
+                                          ? AppColors.darkSurface
+                                          : Colors.white,
+                                      width: 2,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -140,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style: GoogleFonts.plusJakartaSans(
                                   fontSize: 24,
                                   fontWeight: FontWeight.w800,
-                                  color: AppColors.textPrimary,
+                                  color: colors.textPrimary,
                                   letterSpacing: -0.5,
                                 ),
                               ),
@@ -149,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style: GoogleFonts.plusJakartaSans(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
-                                  color: AppColors.textSecondary,
+                                  color: colors.textSecondary,
                                 ),
                               ),
                             ],
@@ -157,16 +191,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
 
-                      // Header Action Icons
+                      // Header Action Icons: One-Tap Theme Toggle & More
                       Row(
                         children: [
-                          _buildHeaderIconButton(
-                            icon: Icons.camera_alt_outlined,
-                            onTap: () {},
-                          ),
+                          _buildThemeToggleButton(colors),
                           const SizedBox(width: 8),
                           _buildHeaderIconButton(
                             icon: Icons.more_horiz_rounded,
+                            colors: colors,
                             onTap: () {},
                           ),
                         ],
@@ -181,11 +213,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     duration: const Duration(milliseconds: 200),
                     height: 48,
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceSecondary,
+                      color: colors.surfaceSecondary,
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(
                         color: _searchFocusNode.hasFocus
-                            ? AppColors.lavender
+                            ? colors.focusedBorder
                             : Colors.transparent,
                         width: 1.5,
                       ),
@@ -193,10 +225,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 14),
                     child: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.search_rounded,
                           size: 20,
-                          color: Color(0xFF555555),
+                          color: isDark
+                              ? const Color(0xFFAAAAAA)
+                              : const Color(0xFF555555),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -207,13 +241,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: GoogleFonts.plusJakartaSans(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: AppColors.textPrimary,
+                              color: colors.textPrimary,
                             ),
                             decoration: InputDecoration(
                               hintText: 'Search messages, contacts...',
                               hintStyle: GoogleFonts.plusJakartaSans(
                                 fontSize: 14,
-                                color: AppColors.textPlaceholder,
+                                color: colors.textPlaceholder,
                               ),
                               border: InputBorder.none,
                               isDense: true,
@@ -227,10 +261,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               _searchController.clear();
                               _onSearchChanged('');
                             },
-                            child: const Icon(
+                            child: Icon(
                               Icons.close_rounded,
                               size: 18,
-                              color: Color(0xFF777777),
+                              color: colors.textSecondary,
                             ),
                           ),
                       ],
@@ -261,13 +295,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               decoration: BoxDecoration(
                                 color: isSelected
-                                    ? AppColors.lavender
+                                    ? (isDark
+                                        ? AppColors.darkLavenderSurface
+                                        : AppColors.lavender)
                                     : Colors.transparent,
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
                                   color: isSelected
-                                      ? AppColors.lavender
-                                      : AppColors.border,
+                                      ? (isDark
+                                          ? AppColors.darkFocusBorder
+                                          : AppColors.lavender)
+                                      : colors.border,
                                   width: 1,
                                 ),
                               ),
@@ -282,8 +320,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ? FontWeight.w700
                                           : FontWeight.w500,
                                       color: isSelected
-                                          ? AppColors.textPrimary
-                                          : AppColors.textSecondary,
+                                          ? (isDark
+                                              ? const Color(0xFFE7C8F8)
+                                              : AppColors.textPrimary)
+                                          : colors.textSecondary,
                                     ),
                                   ),
                                   if (index == 1) ...[
@@ -294,7 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         vertical: 1.5,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: AppColors.limeGreen,
+                                        color: colors.greenAccent,
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Text(
@@ -302,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         style: GoogleFonts.plusJakartaSans(
                                           fontSize: 10,
                                           fontWeight: FontWeight.w800,
-                                          color: AppColors.textPrimary,
+                                          color: const Color(0xFF111111),
                                         ),
                                       ),
                                     ),
@@ -326,7 +366,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 children: [
                   // Active Contacts / Stories Bar
-                  _buildActiveStoriesBar(),
+                  _buildActiveStoriesBar(colors),
 
                   const SizedBox(height: 12),
 
@@ -341,7 +381,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary,
+                            color: colors.textPrimary,
                           ),
                         ),
                         Text(
@@ -349,7 +389,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: AppColors.textSecondary,
+                            color: colors.textSecondary,
                           ),
                         ),
                       ],
@@ -360,7 +400,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // Chat items list
                   if (_filteredChats.isEmpty)
-                    _buildEmptyState()
+                    _buildEmptyState(colors)
                   else
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -368,7 +408,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: _filteredChats.map((chat) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 10),
-                            child: _buildChatCard(chat),
+                            child: _buildChatCard(chat, colors),
                           );
                         }).toList(),
                       ),
@@ -382,14 +422,58 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      // Sleek Pill FAB matching the reference design: Black + White Arrow/Text
-      floatingActionButton: _buildNewChatPillButton(),
+      // Sleek Pill FAB: In Dark Theme, vibrant Lavender #DDB9F2 + #111111 CTA
+      floatingActionButton: _buildNewChatPillButton(colors),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  Widget _buildThemeToggleButton(PingMeThemeColors colors) {
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: ThemeController.instance.themeModeNotifier,
+      builder: (context, currentMode, _) {
+        final isDark = currentMode == ThemeMode.dark;
+        return InkWell(
+          onTap: () {
+            ThemeController.instance.toggleTheme();
+          },
+          borderRadius: BorderRadius.circular(20),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              color: colors.surfaceSecondary,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: isDark ? AppColors.darkFocusBorder : colors.border,
+                width: 1,
+              ),
+            ),
+            child: Center(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                transitionBuilder: (child, animation) => ScaleTransition(
+                  scale: animation,
+                  child: child,
+                ),
+                child: Icon(
+                  isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                  key: ValueKey<bool>(isDark),
+                  size: 18,
+                  color: isDark ? const Color(0xFFE7C8F8) : AppColors.textPrimary,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
   Widget _buildHeaderIconButton({
     required IconData icon,
+    required PingMeThemeColors colors,
     required VoidCallback onTap,
   }) {
     return InkWell(
@@ -399,20 +483,22 @@ class _HomeScreenState extends State<HomeScreen> {
         width: 38,
         height: 38,
         decoration: BoxDecoration(
-          color: AppColors.surfaceSecondary,
+          color: colors.surfaceSecondary,
           shape: BoxShape.circle,
+          border: Border.all(color: colors.border, width: 1),
         ),
         child: Icon(
           icon,
           size: 19,
-          color: AppColors.textPrimary,
+          color: colors.textPrimary,
         ),
       ),
     );
   }
 
-  Widget _buildActiveStoriesBar() {
+  Widget _buildActiveStoriesBar(PingMeThemeColors colors) {
     final activeUsers = _allChats.where((c) => c.isOnline).toList();
+    final isDark = colors.isDark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -424,7 +510,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
+              color: colors.textSecondary,
             ),
           ),
         ),
@@ -448,16 +534,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 54,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: AppColors.surface,
+                          color: colors.surface,
                           border: Border.all(
-                            color: AppColors.border,
+                            color: colors.border,
                             width: 1.5,
                           ),
                         ),
                         child: Center(
                           child: Icon(
                             Icons.add_rounded,
-                            color: AppColors.textPrimary,
+                            color: colors.textPrimary,
                             size: 24,
                           ),
                         ),
@@ -468,7 +554,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.textSecondary,
+                          color: colors.textSecondary,
                         ),
                       ),
                     ],
@@ -491,18 +577,28 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 54,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: user.avatarBgColor,
+                              color: isDark
+                                  ? (user.isFavorite
+                                      ? AppColors.darkLavenderSurface
+                                      : (user.unreadCount > 0
+                                          ? AppColors.darkGreenSurface
+                                          : AppColors.darkElevated))
+                                  : user.avatarBgColor,
                               border: Border.all(
-                                color: Colors.white,
+                                color: isDark
+                                    ? AppColors.darkSurface
+                                    : Colors.white,
                                 width: 2,
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.04),
-                                  blurRadius: 6,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
+                              boxShadow: isDark
+                                  ? []
+                                  : [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(alpha: 0.04),
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
                             ),
                             child: Center(
                               child: Text(
@@ -510,7 +606,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style: GoogleFonts.plusJakartaSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 15,
-                                  color: AppColors.textPrimary,
+                                  color: colors.textPrimary,
                                 ),
                               ),
                             ),
@@ -523,8 +619,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: 14,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: AppColors.onlineDot,
-                                border: Border.all(color: Colors.white, width: 2.2),
+                                color: colors.onlineDot,
+                                border: Border.all(
+                                  color: isDark
+                                      ? AppColors.darkSurface
+                                      : Colors.white,
+                                  width: 2.2,
+                                ),
                               ),
                             ),
                           ),
@@ -541,7 +642,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: GoogleFonts.plusJakartaSans(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
+                            color: colors.textPrimary,
                           ),
                         ),
                       ),
@@ -556,7 +657,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildChatCard(ChatSummary chat) {
+  Widget _buildChatCard(ChatSummary chat, PingMeThemeColors colors) {
+    final isDark = colors.isDark;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -565,10 +668,18 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            color: colors.surface,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.border, width: 1),
-            boxShadow: AppColors.softCardShadow,
+            border: Border.all(color: colors.border, width: 1),
+            boxShadow: isDark
+                ? []
+                : [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.03),
+                      blurRadius: 12,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
           ),
           child: Row(
             children: [
@@ -581,7 +692,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 50,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: chat.avatarBgColor,
+                      color: isDark
+                          ? (chat.isFavorite
+                              ? AppColors.darkLavenderSurface
+                              : (chat.unreadCount > 0
+                                  ? AppColors.darkGreenSurface
+                                  : AppColors.darkElevated))
+                          : chat.avatarBgColor,
                     ),
                     child: Center(
                       child: Text(
@@ -589,7 +706,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: GoogleFonts.plusJakartaSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
-                          color: AppColors.textPrimary,
+                          color: colors.textPrimary,
                         ),
                       ),
                     ),
@@ -603,9 +720,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: chat.isOnline
-                            ? AppColors.onlineDot
-                            : const Color(0xFFCFCFCF),
-                        border: Border.all(color: Colors.white, width: 2),
+                            ? colors.onlineDot
+                            : colors.offline,
+                        border: Border.all(
+                          color: isDark ? colors.surface : Colors.white,
+                          width: 2,
+                        ),
                       ),
                     ),
                   ),
@@ -630,7 +750,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: GoogleFonts.plusJakartaSans(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                              color: colors.textPrimary,
                             ),
                           ),
                         ),
@@ -640,8 +760,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                             color: chat.unreadCount > 0
-                                ? AppColors.onlineText
-                                : AppColors.textPlaceholder,
+                                ? colors.onlineText
+                                : colors.textPlaceholder,
                           ),
                         ),
                       ],
@@ -660,10 +780,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ? FontWeight.w600
                                   : FontWeight.w400,
                               color: chat.isTyping
-                                  ? AppColors.typingText
+                                  ? colors.onlineText
                                   : (chat.unreadCount > 0
-                                      ? AppColors.textPrimary
-                                      : AppColors.textSecondary),
+                                      ? colors.textPrimary
+                                      : colors.textSecondary),
                               fontStyle: chat.isTyping
                                   ? FontStyle.italic
                                   : FontStyle.normal,
@@ -671,7 +791,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
 
-                        // Unread Count Badge in Lime Green (#C8F0B0)
+                        // Unread Count Badge (Lime #B9E99F in Dark, #C8F0B0 in Light)
                         if (chat.unreadCount > 0) ...[
                           const SizedBox(width: 8),
                           Container(
@@ -680,7 +800,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               vertical: 3,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.limeGreen,
+                              color: colors.greenAccent,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -688,7 +808,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: GoogleFonts.plusJakartaSans(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w800,
-                                color: AppColors.textPrimary,
+                                color: const Color(0xFF111111),
                               ),
                             ),
                           ),
@@ -705,7 +825,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(PingMeThemeColors colors) {
     return Padding(
       padding: const EdgeInsets.all(40),
       child: Center(
@@ -714,14 +834,14 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               width: 68,
               height: 68,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.surfaceSecondary,
+                color: colors.surfaceSecondary,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.chat_bubble_outline_rounded,
                 size: 28,
-                color: AppColors.textSecondary,
+                color: colors.textSecondary,
               ),
             ),
             const SizedBox(height: 16),
@@ -730,7 +850,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
+                color: colors.textPrimary,
               ),
             ),
             const SizedBox(height: 6),
@@ -738,7 +858,7 @@ class _HomeScreenState extends State<HomeScreen> {
               'Try changing your filter or search query',
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
-                color: AppColors.textSecondary,
+                color: colors.textSecondary,
               ),
             ),
           ],
@@ -747,23 +867,28 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildNewChatPillButton() {
+  Widget _buildNewChatPillButton(PingMeThemeColors colors) {
+    final isDark = colors.isDark;
+
     return GestureDetector(
       onTap: () {
         if (_allChats.isNotEmpty) {
           _openChat(_allChats.first);
         }
       },
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
         height: 52,
         padding: const EdgeInsets.symmetric(horizontal: 22),
         decoration: BoxDecoration(
-          color: AppColors.ctaBlack,
+          color: colors.ctaBackground,
           borderRadius: BorderRadius.circular(26),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.22),
-              blurRadius: 18,
+              color: isDark
+                  ? AppColors.darkLavenderAccent.withValues(alpha: 0.35)
+                  : Colors.black.withValues(alpha: 0.22),
+              blurRadius: isDark ? 22 : 18,
               offset: const Offset(0, 6),
             ),
           ],
@@ -771,9 +896,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.add_rounded,
-              color: Colors.white,
+              color: colors.ctaForeground,
               size: 20,
             ),
             const SizedBox(width: 8),
@@ -782,7 +907,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
-                color: Colors.white,
+                color: colors.ctaForeground,
               ),
             ),
             const SizedBox(width: 8),
@@ -791,11 +916,13 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 22,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.18),
+                color: isDark
+                    ? Colors.black.withValues(alpha: 0.12)
+                    : Colors.white.withValues(alpha: 0.18),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_forward_ios_rounded,
-                color: Colors.white,
+                color: colors.ctaForeground,
                 size: 11,
               ),
             ),
