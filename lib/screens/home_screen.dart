@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../models/chat_model.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
+import '../widgets/circular_theme_transition.dart';
 import 'chat_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -186,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       alignment: Alignment.centerLeft,
                                       children: <Widget>[
                                         ...previousChildren,
-                                        if (currentChild != null) currentChild,
+                                        ?currentChild,
                                       ],
                                     );
                                   },
@@ -222,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       alignment: Alignment.centerLeft,
                                       children: <Widget>[
                                         ...previousChildren,
-                                        if (currentChild != null) currentChild,
+                                        ?currentChild,
                                       ],
                                     );
                                   },
@@ -290,38 +291,49 @@ class _HomeScreenState extends State<HomeScreen> {
       valueListenable: ThemeController.instance.themeModeNotifier,
       builder: (context, currentMode, _) {
         final isDark = currentMode == ThemeMode.dark;
-        return InkWell(
-          onTap: () {
-            ThemeController.instance.toggleTheme();
+        return Builder(
+          builder: (btnContext) {
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTapUp: (details) {
+                final transition = CircularThemeTransition.of(context);
+                if (transition != null) {
+                  transition.toggleThemeFrom(
+                    globalPosition: details.globalPosition,
+                  );
+                } else {
+                  ThemeController.instance.toggleTheme();
+                }
+              },
+              child: Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: colors.surfaceSecondary,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isDark ? AppColors.darkFocusBorder : colors.border,
+                    width: 1,
+                  ),
+                ),
+                child: Center(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    transitionBuilder: (child, animation) => ScaleTransition(
+                      scale: animation,
+                      child: child,
+                    ),
+                    child: Icon(
+                      isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                      key: ValueKey<bool>(isDark),
+                      size: 18,
+                      color: isDark ? const Color(0xFFE7C8F8) : AppColors.textPrimary,
+                    ),
+                  ),
+                ),
+              ),
+            );
           },
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            width: 38,
-            height: 38,
-            decoration: BoxDecoration(
-              color: colors.surfaceSecondary,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: isDark ? AppColors.darkFocusBorder : colors.border,
-                width: 1,
-              ),
-            ),
-            child: Center(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                transitionBuilder: (child, animation) => ScaleTransition(
-                  scale: animation,
-                  child: child,
-                ),
-                child: Icon(
-                  isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-                  key: ValueKey<bool>(isDark),
-                  size: 18,
-                  color: isDark ? const Color(0xFFE7C8F8) : AppColors.textPrimary,
-                ),
-              ),
-            ),
-          ),
         );
       },
     );

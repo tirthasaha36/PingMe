@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'screens/home_screen.dart';
 import 'screens/splash_screen.dart';
 import 'theme/app_theme.dart';
+import 'widgets/circular_theme_transition.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +38,11 @@ class PingMeApp extends StatelessWidget {
             darkTheme: AppTheme.darkTheme,
             themeMode: themeMode,
             themeAnimationDuration: Duration.zero,
+            builder: (context, child) {
+              return CircularThemeTransition(
+                child: child ?? const SizedBox.shrink(),
+              );
+            },
             home: const SplashOrHomeWrapper(),
           ),
         );
