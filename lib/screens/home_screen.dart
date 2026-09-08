@@ -108,8 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
+                      Expanded(
+                        child: Row(
+                          children: [
                           // User Avatar with Online Dot
                           Stack(
                             clipBehavior: Clip.none,
@@ -171,54 +172,85 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                           const SizedBox(width: 14),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 260),
-                                transitionBuilder: (child, animation) => FadeTransition(
-                                  opacity: animation,
-                                  child: SlideTransition(
-                                    position: Tween<Offset>(
-                                      begin: const Offset(0, 0.2),
-                                      end: Offset.zero,
-                                    ).animate(animation),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 240),
+                                  switchInCurve: Curves.easeOutCubic,
+                                  switchOutCurve: Curves.easeInCubic,
+                                  layoutBuilder: (currentChild, previousChildren) {
+                                    return Stack(
+                                      alignment: Alignment.centerLeft,
+                                      children: <Widget>[
+                                        ...previousChildren,
+                                        if (currentChild != null) currentChild,
+                                      ],
+                                    );
+                                  },
+                                  transitionBuilder: (child, animation) => FadeTransition(
+                                    opacity: animation,
+                                    child: SlideTransition(
+                                      position: Tween<Offset>(
+                                        begin: const Offset(0, 0.12),
+                                        end: Offset.zero,
+                                      ).animate(animation),
+                                      child: child,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    _getHeaderTitle(),
+                                    key: ValueKey<String>(_getHeaderTitle()),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w800,
+                                      color: colors.textPrimary,
+                                      letterSpacing: -0.5,
+                                    ),
+                                  ),
+                                ),
+                                AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 240),
+                                  switchInCurve: Curves.easeOutCubic,
+                                  switchOutCurve: Curves.easeInCubic,
+                                  layoutBuilder: (currentChild, previousChildren) {
+                                    return Stack(
+                                      alignment: Alignment.centerLeft,
+                                      children: <Widget>[
+                                        ...previousChildren,
+                                        if (currentChild != null) currentChild,
+                                      ],
+                                    );
+                                  },
+                                  transitionBuilder: (child, animation) => FadeTransition(
+                                    opacity: animation,
                                     child: child,
                                   ),
-                                ),
-                                child: Text(
-                                  _getHeaderTitle(),
-                                  key: ValueKey<String>(_getHeaderTitle()),
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w800,
-                                    color: colors.textPrimary,
-                                    letterSpacing: -0.5,
+                                  child: Text(
+                                    _getHeaderSubtitle(),
+                                    key: ValueKey<String>(_getHeaderSubtitle()),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: colors.textSecondary,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 260),
-                                transitionBuilder: (child, animation) => FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                ),
-                                child: Text(
-                                  _getHeaderSubtitle(),
-                                  key: ValueKey<String>(_getHeaderSubtitle()),
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: colors.textSecondary,
-                                  ),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),
+                    ),
+                    const SizedBox(width: 8),
 
-                      // Header Action Icons: One-Tap Theme Toggle & More
+                    // Header Action Icons: One-Tap Theme Toggle & More
                       Row(
                         children: [
                           _buildThemeToggleButton(colors),
@@ -232,156 +264,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-
-                  if (_currentNavIndex == 0) ...[
-                    const SizedBox(height: 16),
-
-                    // Search Bar
-                    Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: colors.surfaceSecondary,
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(
-                          color: _searchFocusNode.hasFocus
-                              ? colors.focusedBorder
-                              : Colors.transparent,
-                          width: 1.5,
-                        ),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.search_rounded,
-                            size: 20,
-                            color: isDark
-                                ? const Color(0xFFAAAAAA)
-                                : const Color(0xFF555555),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: TextField(
-                              controller: _searchController,
-                              focusNode: _searchFocusNode,
-                              onChanged: _onSearchChanged,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: colors.textPrimary,
-                              ),
-                              decoration: InputDecoration(
-                                hintText: 'Search messages, contacts...',
-                                hintStyle: GoogleFonts.plusJakartaSans(
-                                  fontSize: 14,
-                                  color: colors.textPlaceholder,
-                                ),
-                                border: InputBorder.none,
-                                isDense: true,
-                                contentPadding: EdgeInsets.zero,
-                              ),
-                            ),
-                          ),
-                          if (_searchController.text.isNotEmpty)
-                            GestureDetector(
-                              onTap: () {
-                                _searchController.clear();
-                                _onSearchChanged('');
-                              },
-                              child: Icon(
-                                Icons.close_rounded,
-                                size: 18,
-                                color: colors.textSecondary,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 14),
-
-                    // Filter Pills (All, Unread, Groups, Favorites)
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      physics: const BouncingScrollPhysics(),
-                      child: Row(
-                        children: List.generate(_filters.length, (index) {
-                          final isSelected = _selectedFilterIndex == index;
-                          final label = _filters[index];
-
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: InkWell(
-                              onTap: () => _applyFilter(index),
-                              borderRadius: BorderRadius.circular(20),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 7,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? (isDark
-                                          ? AppColors.darkLavenderSurface
-                                          : AppColors.lavender)
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: isSelected
-                                        ? (isDark
-                                            ? AppColors.darkFocusBorder
-                                            : AppColors.lavender)
-                                        : colors.border,
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      label,
-                                      style: GoogleFonts.plusJakartaSans(
-                                        fontSize: 13,
-                                        fontWeight: isSelected
-                                            ? FontWeight.w700
-                                            : FontWeight.w500,
-                                        color: isSelected
-                                            ? (isDark
-                                                ? const Color(0xFFE7C8F8)
-                                                : AppColors.textPrimary)
-                                            : colors.textSecondary,
-                                      ),
-                                    ),
-                                    if (index == 1) ...[
-                                      const SizedBox(width: 6),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 6,
-                                          vertical: 1.5,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: colors.greenAccent,
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        child: Text(
-                                          '${_allChats.where((c) => c.unreadCount > 0).length}',
-                                          style: GoogleFonts.plusJakartaSans(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w800,
-                                            color: const Color(0xFF111111),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ),
-                  ],
                 ],
               ),
             ),
@@ -756,7 +638,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildActiveTabBody(PingMeThemeColors colors) {
     return PageView(
       controller: _pageController,
-      physics: const BouncingScrollPhysics(),
+      physics: const PageScrollPhysics(parent: BouncingScrollPhysics()),
       onPageChanged: (index) {
         setState(() {
           _currentNavIndex = index;
@@ -771,12 +653,168 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// Tab 0: Chats (Chat List)
+  /// Tab 0: Chats (Search + Filters + Chat List)
   Widget _buildChatsTab(PingMeThemeColors colors) {
+    final isDark = colors.isDark;
+
     return ListView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(vertical: 14),
       children: [
+        // Search Bar
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Container(
+            height: 48,
+            decoration: BoxDecoration(
+              color: colors.surfaceSecondary,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: _searchFocusNode.hasFocus
+                    ? colors.focusedBorder
+                    : Colors.transparent,
+                width: 1.5,
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.search_rounded,
+                  size: 20,
+                  color: isDark
+                      ? const Color(0xFFAAAAAA)
+                      : const Color(0xFF555555),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    focusNode: _searchFocusNode,
+                    onChanged: _onSearchChanged,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: colors.textPrimary,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'Search messages, contacts...',
+                      hintStyle: GoogleFonts.plusJakartaSans(
+                        fontSize: 14,
+                        color: colors.textPlaceholder,
+                      ),
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ),
+                ),
+                if (_searchController.text.isNotEmpty)
+                  GestureDetector(
+                    onTap: () {
+                      _searchController.clear();
+                      _onSearchChanged('');
+                    },
+                    child: Icon(
+                      Icons.close_rounded,
+                      size: 18,
+                      color: colors.textSecondary,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        // Filter Pills (All, Unread, Groups, Favorites)
+        Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: Row(
+              children: List.generate(_filters.length, (index) {
+                final isSelected = _selectedFilterIndex == index;
+                final label = _filters[index];
+
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: InkWell(
+                    onTap: () => _applyFilter(index),
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 7,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? (isDark
+                                ? AppColors.darkLavenderSurface
+                                : AppColors.lavender)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: isSelected
+                              ? (isDark
+                                  ? AppColors.darkFocusBorder
+                                  : AppColors.lavender)
+                              : colors.border,
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            label,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 13,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              color: isSelected
+                                  ? (isDark
+                                      ? const Color(0xFFE7C8F8)
+                                      : AppColors.textPrimary)
+                                  : colors.textSecondary,
+                            ),
+                          ),
+                          if (index == 1) ...[
+                            const SizedBox(width: 6),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 1.5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colors.greenAccent,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                '${_allChats.where((c) => c.unreadCount > 0).length}',
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w800,
+                                  color: const Color(0xFF111111),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 14),
+
         // Chats Section Header
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
@@ -1398,8 +1436,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (_pageController.hasClients) {
                   _pageController.animateToPage(
                     index,
-                    duration: const Duration(milliseconds: 320),
-                    curve: Curves.easeInOutCubic,
+                    duration: const Duration(milliseconds: 380),
+                    curve: Curves.easeOutCubic,
                   );
                 } else {
                   setState(() {
