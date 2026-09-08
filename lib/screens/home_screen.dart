@@ -563,6 +563,9 @@ class _HomeScreenState extends State<HomeScreen> {
               }
 
               final user = activeUsers[index - 1];
+              final avatarBg = AppColors.adaptAvatarBg(user.avatarBgColor, isDark);
+              final avatarFg = AppColors.adaptAvatarFg(user.avatarBgColor, isDark);
+
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6),
                 child: GestureDetector(
@@ -577,13 +580,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 54,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: isDark
-                                  ? (user.isFavorite
-                                      ? AppColors.darkLavenderSurface
-                                      : (user.unreadCount > 0
-                                          ? AppColors.darkGreenSurface
-                                          : AppColors.darkElevated))
-                                  : user.avatarBgColor,
+                              color: avatarBg,
                               border: Border.all(
                                 color: isDark
                                     ? AppColors.darkSurface
@@ -606,7 +603,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 style: GoogleFonts.plusJakartaSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 15,
-                                  color: colors.textPrimary,
+                                  color: avatarFg,
                                 ),
                               ),
                             ),
@@ -659,6 +656,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildChatCard(ChatSummary chat, PingMeThemeColors colors) {
     final isDark = colors.isDark;
+    final avatarBg = AppColors.adaptAvatarBg(chat.avatarBgColor, isDark);
+    final avatarFg = AppColors.adaptAvatarFg(chat.avatarBgColor, isDark);
 
     return Material(
       color: Colors.transparent,
@@ -692,13 +691,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 50,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isDark
-                          ? (chat.isFavorite
-                              ? AppColors.darkLavenderSurface
-                              : (chat.unreadCount > 0
-                                  ? AppColors.darkGreenSurface
-                                  : AppColors.darkElevated))
-                          : chat.avatarBgColor,
+                      color: avatarBg,
                     ),
                     child: Center(
                       child: Text(
@@ -706,7 +699,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: GoogleFonts.plusJakartaSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
-                          color: colors.textPrimary,
+                          color: avatarFg,
                         ),
                       ),
                     ),

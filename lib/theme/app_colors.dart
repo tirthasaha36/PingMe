@@ -88,6 +88,53 @@ class AppColors {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return isDark ? PingMeThemeColors.dark() : PingMeThemeColors.light();
   }
+
+  /// Maps a light pastel avatar background color to its corresponding dark theme surface/accent
+  /// preserving each individual contact's unique color identity (Lavender, Lime, Soft Pink, etc.)
+  static Color adaptAvatarBg(Color originalColor, bool isDark) {
+    if (!isDark) return originalColor;
+    final val = originalColor.toARGB32() & 0x00FFFFFF;
+
+    // Lime Green (#C8F0B0) -> Dark Green Surface (#29402A)
+    if (val == 0xC8F0B0 || val == 0xBAF1A4 || val == 0xD4F6B6) {
+      return darkGreenSurface;
+    }
+    // Lavender (#E9D8F8) -> Dark Lavender Surface (#3A2945)
+    if (val == 0xE9D8F8 || val == 0xD6C0F7 || val == 0xEBD8FA) {
+      return darkLavenderSurface;
+    }
+    // Soft Pink (#F7DFF3) -> Dark Pink Surface (#3F293B)
+    if (val == 0xF7DFF3 || val == 0xF1D4F6) {
+      return darkPinkSurface;
+    }
+    // Surface Secondary / Gray (#EEEEEC / #F0F0EE) -> Dark Elevated (#202020)
+    if (val == 0xEEEEEC || val == 0xF0F0EE) {
+      return darkElevated;
+    }
+
+    return darkElevated;
+  }
+
+  /// Returns the corresponding text/initials color for an avatar in the current theme
+  static Color adaptAvatarFg(Color originalBgColor, bool isDark) {
+    if (!isDark) return textPrimary;
+    final val = originalBgColor.toARGB32() & 0x00FFFFFF;
+
+    // Lime Green avatar -> Lime accent text (#B9E99F)
+    if (val == 0xC8F0B0 || val == 0xBAF1A4 || val == 0xD4F6B6) {
+      return darkLime;
+    }
+    // Lavender avatar -> Lavender accent text (#DDB9F2)
+    if (val == 0xE9D8F8 || val == 0xD6C0F7 || val == 0xEBD8FA) {
+      return darkLavenderAccent;
+    }
+    // Soft Pink avatar -> Soft pink accent text (#E8B9DE)
+    if (val == 0xF7DFF3 || val == 0xF1D4F6) {
+      return darkPinkAccent;
+    }
+
+    return darkTextPrimary;
+  }
 }
 
 /// Helper container providing uniform color access according to active theme

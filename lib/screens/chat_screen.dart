@@ -146,7 +146,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 height: 40,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isDark ? AppColors.darkLavenderSurface : widget.chat.avatarBgColor,
+                  color: AppColors.adaptAvatarBg(widget.chat.avatarBgColor, isDark),
                 ),
                 child: Center(
                   child: Text(
@@ -154,7 +154,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     style: GoogleFonts.plusJakartaSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 14,
-                      color: colors.textPrimary,
+                      color: AppColors.adaptAvatarFg(widget.chat.avatarBgColor, isDark),
                     ),
                   ),
                 ),
@@ -301,7 +301,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   margin: const EdgeInsets.only(right: 8, bottom: 2),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: isDark ? AppColors.darkLavenderSurface : widget.chat.avatarBgColor,
+                    color: AppColors.adaptAvatarBg(widget.chat.avatarBgColor, isDark),
                   ),
                   child: Center(
                     child: Text(
@@ -309,7 +309,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
-                        color: colors.textPrimary,
+                        color: AppColors.adaptAvatarFg(widget.chat.avatarBgColor, isDark),
                       ),
                     ),
                   ),
