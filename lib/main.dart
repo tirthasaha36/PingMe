@@ -36,6 +36,7 @@ class PingMeApp extends StatelessWidget {
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeMode,
+            themeAnimationDuration: Duration.zero,
             home: const SplashOrHomeWrapper(),
           ),
         );

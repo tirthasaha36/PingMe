@@ -212,8 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 16),
 
                     // Search Bar
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
+                    Container(
                       height: 48,
                       decoration: BoxDecoration(
                         color: colors.surfaceSecondary,
@@ -290,8 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: InkWell(
                               onTap: () => _applyFilter(index),
                               borderRadius: BorderRadius.circular(20),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
+                              child: Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 16,
                                   vertical: 7,
@@ -374,9 +372,9 @@ class _HomeScreenState extends State<HomeScreen> {
       // Footer Navigation Bar: Chats, Connections, Updates, Calls
       bottomNavigationBar: _buildBottomFooter(colors),
 
-      // Sleek Pill FAB (shown for Chats tab or relevant actions)
-      floatingActionButton: _currentNavIndex == 0 ? _buildNewChatPillButton(colors) : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // Floating Action Button: Add new people / chat at right corner above footer
+      floatingActionButton: _currentNavIndex == 0 ? _buildNewChatFab(colors) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -390,8 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ThemeController.instance.toggleTheme();
           },
           borderRadius: BorderRadius.circular(20),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
+          child: Container(
             width: 38,
             height: 38,
             decoration: BoxDecoration(
@@ -654,66 +651,40 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildNewChatPillButton(PingMeThemeColors colors) {
+  Widget _buildNewChatFab(PingMeThemeColors colors) {
     final isDark = colors.isDark;
 
-    return GestureDetector(
-      onTap: () {
-        if (_allChats.isNotEmpty) {
-          _openChat(_allChats.first);
-        }
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        height: 52,
-        padding: const EdgeInsets.symmetric(horizontal: 22),
-        decoration: BoxDecoration(
-          color: colors.ctaBackground,
-          borderRadius: BorderRadius.circular(26),
-          boxShadow: [
-            BoxShadow(
-              color: isDark
-                  ? AppColors.darkLavenderAccent.withValues(alpha: 0.35)
-                  : Colors.black.withValues(alpha: 0.22),
-              blurRadius: isDark ? 22 : 18,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.add_rounded,
-              color: colors.ctaForeground,
-              size: 20,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              'Start new chat',
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: colors.ctaForeground,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              width: 22,
-              height: 22,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6, right: 4),
+      child: GestureDetector(
+        onTap: () {
+          if (_allChats.isNotEmpty) {
+            _openChat(_allChats.first);
+          }
+        },
+        child: Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            color: colors.ctaBackground,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
                 color: isDark
-                    ? Colors.black.withValues(alpha: 0.12)
-                    : Colors.white.withValues(alpha: 0.18),
+                    ? AppColors.darkLavenderAccent.withValues(alpha: 0.38)
+                    : Colors.black.withValues(alpha: 0.24),
+                blurRadius: isDark ? 20 : 16,
+                offset: const Offset(0, 5),
               ),
-              child: Icon(
-                Icons.arrow_forward_ios_rounded,
-                color: colors.ctaForeground,
-                size: 11,
-              ),
+            ],
+          ),
+          child: Center(
+            child: Icon(
+              Icons.person_add_alt_1_rounded,
+              color: colors.ctaForeground,
+              size: 26,
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -1401,8 +1372,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               },
               borderRadius: BorderRadius.circular(16),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
+              child: Container(
                 height: 52,
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 decoration: BoxDecoration(
