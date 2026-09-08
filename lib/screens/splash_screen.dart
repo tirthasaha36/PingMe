@@ -96,79 +96,80 @@ class _SplashScreenState extends State<SplashScreen>
         builder: (context, constraints) {
           final isSmallScreen = constraints.maxHeight < 680;
           final logoSize = isSmallScreen ? 94.0 : 116.0;
+          final screenH = constraints.maxHeight;
 
           return Stack(
             fit: StackFit.expand,
             children: [
-              // 1. Background Organic Pastel Waves & Light Dotted Connection Path
+              // ── 1. Full background painter (waves, glow, connecting curves) ──
               Positioned.fill(
                 child: CustomPaint(
                   painter: _SplashBackgroundPainter(),
                 ),
               ),
 
-              // 2. Upper-Left White Chat Bubble Floating in Lime Aura
+
+              // ── 3. Upper-left floating white chat bubble (3 green dots) ──
               Positioned(
-                top: constraints.maxHeight * 0.16,
-                left: 36,
+                top: screenH * 0.18,
+                left: 30,
                 child: FadeTransition(
                   opacity: _decorFade,
                   child: _buildTopLeftChatBubble(),
                 ),
               ),
 
-              // 3. Upper-Right Floating Lavender Heart Bubble with Sparkles
+              // ── 4. Upper-right floating heart bubble + sparkles ──
               Positioned(
-                top: constraints.maxHeight * 0.19,
-                right: 34,
+                top: screenH * 0.20,
+                right: 30,
                 child: FadeTransition(
                   opacity: _decorFade,
                   child: _buildHeartBubbleWithSparkles(),
                 ),
               ),
 
-              // 4. Handwritten Artistic Quote ("Good Conversations Brighter Days")
+              // ── 5. Handwritten quote "Good Conversations Brighter Days" ──
               Positioned(
-                right: 32,
-                top: constraints.maxHeight * 0.61,
+                right: 28,
+                top: screenH * 0.61,
                 child: FadeTransition(
                   opacity: _decorFade,
                   child: Transform.rotate(
-                    angle: -11 * math.pi / 180,
+                    angle: -8 * math.pi / 180,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Good',
                           style: GoogleFonts.caveat(
-                            fontSize: 27,
+                            fontSize: 26,
                             fontWeight: FontWeight.w700,
-                            color: const Color(0xFFC0ADE8).withValues(alpha: 0.85),
-                            height: 1.05,
+                            color: const Color(0xFFC0ADE8).withValues(alpha: 0.80),
+                            height: 1.1,
                           ),
                         ),
                         Text(
                           'Conversations',
                           style: GoogleFonts.caveat(
-                            fontSize: 25,
+                            fontSize: 24,
                             fontWeight: FontWeight.w700,
-                            color: const Color(0xFFC0ADE8).withValues(alpha: 0.85),
-                            height: 1.05,
+                            color: const Color(0xFFC0ADE8).withValues(alpha: 0.80),
+                            height: 1.1,
                           ),
                         ),
                         Text(
                           'Brighter Days',
                           style: GoogleFonts.caveat(
-                            fontSize: 27,
+                            fontSize: 26,
                             fontWeight: FontWeight.w700,
-                            color: const Color(0xFFC0ADE8).withValues(alpha: 0.85),
+                            color: const Color(0xFFC0ADE8).withValues(alpha: 0.80),
                             height: 1.15,
                           ),
                         ),
-                        const SizedBox(height: 3),
-                        // Double underline doodle
+                        const SizedBox(height: 2),
                         CustomPaint(
-                          size: const Size(82, 10),
+                          size: const Size(90, 10),
                           painter: _UnderlineDoodlePainter(),
                         ),
                       ],
@@ -177,7 +178,7 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
               ),
 
-              // 5. Main Center Content (Logo, PingMe, Tagline, Upper Pill, Bottom Loader)
+              // ── 6. Main centered content ──
               Positioned.fill(
                 child: SafeArea(
                   child: SizedBox(
@@ -191,25 +192,24 @@ class _SplashScreenState extends State<SplashScreen>
                         children: [
                           const Spacer(flex: 7),
 
-                          // Logo with Left Splash Sparkles
+                          // Logo with sparkle accents
                           Center(
                             child: Stack(
                               clipBehavior: Clip.none,
                               alignment: Alignment.center,
                               children: [
-                                // Left 2 decorative sparkle tick lines
+                                // Left sparkle ticks
                                 Positioned(
-                                  left: -22,
-                                  top: -14,
+                                  left: -24,
+                                  top: -16,
                                   child: FadeTransition(
                                     opacity: _decorFade,
                                     child: CustomPaint(
-                                      size: const Size(26, 26),
+                                      size: const Size(28, 28),
                                       painter: _LeftSparklesPainter(),
                                     ),
                                   ),
                                 ),
-
                                 // Main PingMe App Logo
                                 FadeTransition(
                                   opacity: _logoFade,
@@ -225,9 +225,9 @@ class _SplashScreenState extends State<SplashScreen>
                             ),
                           ),
 
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 28),
 
-                          // Brand Name "PingMe"
+                          // Brand Name + Tagline + Accent Pill
                           SlideTransition(
                             position: _contentSlide,
                             child: FadeTransition(
@@ -240,7 +240,7 @@ class _SplashScreenState extends State<SplashScreen>
                                     'PingMe',
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.plusJakartaSans(
-                                      fontSize: isSmallScreen ? 34 : 40,
+                                      fontSize: isSmallScreen ? 32 : 38,
                                       fontWeight: FontWeight.w800,
                                       letterSpacing: -0.8,
                                       color: AppColors.textPrimary,
@@ -257,19 +257,18 @@ class _SplashScreenState extends State<SplashScreen>
                                       letterSpacing: 0.1,
                                     ),
                                   ),
+                                  const SizedBox(height: 16),
 
-                                  const SizedBox(height: 18),
-
-                                  // Signature Gradient Accent Pill
+                                  // Signature gradient accent pill (Green → Lavender)
                                   Container(
-                                    width: 78,
-                                    height: 7.5,
+                                    width: 82,
+                                    height: 7,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
                                       gradient: const LinearGradient(
                                         colors: [
-                                          Color(0xFFBCEFB0), // Pastel Lime Green
-                                          Color(0xFFE2CBF8), // Soft Lavender
+                                          Color(0xFFBCEFB0),
+                                          Color(0xFFE2CBF8),
                                         ],
                                       ),
                                     ),
@@ -281,17 +280,17 @@ class _SplashScreenState extends State<SplashScreen>
 
                           const Spacer(flex: 9),
 
-                          // Bottom E2E Encrypted Section & Gradient Progress Bar
+                          // Bottom: gradient progress bar + E2E badge
                           FadeTransition(
                             opacity: _contentFade,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                // Gradient animated progress bar
+                                // Gradient progress bar
                                 Container(
-                                  width: 126,
-                                  height: 4.5,
+                                  width: 130,
+                                  height: 5,
                                   clipBehavior: Clip.antiAlias,
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFE5E5E2),
@@ -308,9 +307,9 @@ class _SplashScreenState extends State<SplashScreen>
                                             borderRadius: BorderRadius.circular(10),
                                             gradient: const LinearGradient(
                                               colors: [
-                                                Color(0xFF55C778), // Fresh Green
-                                                Color(0xFF5CB8E4), // Soft Cyan
-                                                Color(0xFF9F8CF1), // Soft Purple
+                                                Color(0xFF55C778),
+                                                Color(0xFF5CB8E4),
+                                                Color(0xFF9F8CF1),
                                               ],
                                             ),
                                           ),
@@ -322,7 +321,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                                 const SizedBox(height: 14),
 
-                                // E2E Encrypted label with outline lock icon
+                                // Lock + E2E ENCRYPTED
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -363,12 +362,13 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
+  // ── Floating white chat bubble with 3 green dots ──
   Widget _buildTopLeftChatBubble() {
     return Container(
-      width: 50,
-      height: 40,
+      width: 52,
+      height: 42,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.90),
+        color: Colors.white.withValues(alpha: 0.92),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(18),
           topRight: Radius.circular(18),
@@ -377,8 +377,8 @@ class _SplashScreenState extends State<SplashScreen>
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF89D66E).withValues(alpha: 0.16),
-            blurRadius: 14,
+            color: const Color(0xFF89D66E).withValues(alpha: 0.14),
+            blurRadius: 16,
             offset: const Offset(0, 5),
           ),
         ],
@@ -388,9 +388,9 @@ class _SplashScreenState extends State<SplashScreen>
           mainAxisSize: MainAxisSize.min,
           children: List.generate(3, (index) {
             return Container(
-              width: 5.5,
-              height: 5.5,
-              margin: const EdgeInsets.symmetric(horizontal: 1.8),
+              width: 6,
+              height: 6,
+              margin: const EdgeInsets.symmetric(horizontal: 2),
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: Color(0xFFA5E398),
@@ -402,24 +402,24 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
+  // ── Floating heart bubble with sparkle ticks ──
   Widget _buildHeartBubbleWithSparkles() {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        // Decorative tick rays above heart bubble
+        // Sparkle ticks above-right
         Positioned(
-          top: -9,
-          right: -8,
+          top: -10,
+          right: -10,
           child: CustomPaint(
-            size: const Size(18, 18),
+            size: const Size(20, 20),
             painter: _RightHeartSparklesPainter(),
           ),
         ),
-
-        // Heart Bubble
+        // Heart bubble
         Container(
-          width: 48,
-          height: 38,
+          width: 50,
+          height: 40,
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.94),
             borderRadius: const BorderRadius.only(
@@ -430,8 +430,8 @@ class _SplashScreenState extends State<SplashScreen>
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFC7B1F3).withValues(alpha: 0.22),
-                blurRadius: 12,
+                color: const Color(0xFFC7B1F3).withValues(alpha: 0.20),
+                blurRadius: 14,
                 offset: const Offset(0, 4),
               ),
             ],
@@ -449,137 +449,183 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-/// Paints the organic pastel lime/lavender background glow, sweeping silk waves,
-/// and the subtle connecting trail line between the upper bubbles.
+// ═══════════════════════════════════════════════════════════════════
+// Background Painter — waves, connecting curves, bottom glow
+// ═══════════════════════════════════════════════════════════════════
 class _SplashBackgroundPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
 
-    // 1. Top-Left Lime Green Ambient Glow
+    // ── 1. Soft lime-green ambient glow (top-left quadrant) ──
     final limePaint = Paint()
-      ..shader = RadialGradient(
-        center: const Alignment(-0.85, -0.75),
-        radius: 0.88,
+      ..shader = const RadialGradient(
+        center: Alignment(-0.75, -0.75),
+        radius: 0.70,
         colors: [
-          const Color(0xFFC5F3A8).withValues(alpha: 0.70),
-          const Color(0xFFDAF7C5).withValues(alpha: 0.40),
-          Colors.transparent,
+          Color(0x35C8F0B0),
+          Color(0x18C8F0B0),
+          Color(0x00C8F0B0),
         ],
-        stops: const [0.0, 0.55, 1.0],
-      ).createShader(Rect.fromLTWH(0, 0, w, h * 0.5));
-    canvas.drawRect(Rect.fromLTWH(0, 0, w, h * 0.5), limePaint);
+        stops: [0.0, 0.50, 1.0],
+      ).createShader(Rect.fromLTWH(0, 0, w, h));
+    canvas.drawRect(Rect.fromLTWH(0, 0, w, h), limePaint);
 
-    // 2. Subtle connection curve between top left bubble and center
-    final arcPaint = Paint()
-      ..color = const Color(0xFFBFECA3).withValues(alpha: 0.55)
+    // ── 2. Connecting curve — left bubble to center ──
+    final arcPaintLeft = Paint()
+      ..color = const Color(0xFFBFECA3).withValues(alpha: 0.50)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2;
 
-    final arcPath = Path()
-      ..moveTo(0, h * 0.22)
-      ..quadraticBezierTo(w * 0.20, h * 0.23, w * 0.42, h * 0.32);
-    canvas.drawPath(arcPath, arcPaint);
+    final arcLeft = Path()
+      ..moveTo(w * 0.10, h * 0.22)
+      ..quadraticBezierTo(w * 0.28, h * 0.26, w * 0.45, h * 0.33);
+    canvas.drawPath(arcLeft, arcPaintLeft);
 
-    // Secondary curve toward top-right heart bubble
+    // ── 3. Connecting curve — center to right bubble ──
     final arcPaintRight = Paint()
-      ..color = const Color(0xFFDDD2F5).withValues(alpha: 0.45)
+      ..color = const Color(0xFFDDD2F5).withValues(alpha: 0.42)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2;
 
-    final arcPathRight = Path()
-      ..moveTo(w * 0.55, h * 0.32)
-      ..quadraticBezierTo(w * 0.78, h * 0.27, w, h * 0.21);
-    canvas.drawPath(arcPathRight, arcPaintRight);
+    final arcRight = Path()
+      ..moveTo(w * 0.55, h * 0.33)
+      ..quadraticBezierTo(w * 0.76, h * 0.27, w * 0.92, h * 0.22);
+    canvas.drawPath(arcRight, arcPaintRight);
 
-    // 3. Flowing Silk Waves at the bottom (Lavender / Soft Purple layers)
-    final wavePath1 = Path()
-      ..moveTo(0, h * 0.60)
-      ..cubicTo(w * 0.25, h * 0.70, w * 0.65, h * 0.85, w, h * 0.74)
+    // ── 4. Bottom wave layer 1 — outermost, lightest, enters from left ──
+    final wave1Fill = Path()
+      ..moveTo(0, h * 0.72)
+      ..cubicTo(w * 0.15, h * 0.78, w * 0.35, h * 0.80, w * 0.55, h * 0.76)
+      ..cubicTo(w * 0.75, h * 0.72, w * 0.90, h * 0.78, w, h * 0.82)
       ..lineTo(w, h)
       ..lineTo(0, h)
       ..close();
 
-    final wavePaint1 = Paint()
+    final wave1Paint = Paint()
       ..shader = LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          const Color(0xFFE8DBFA).withValues(alpha: 0.50),
-          const Color(0xFFF3EDFD).withValues(alpha: 0.25),
+          const Color(0xFFD8F5C8).withValues(alpha: 0.40),
+          const Color(0xFFE8DBFA).withValues(alpha: 0.35),
+          const Color(0xFFF3EDFD).withValues(alpha: 0.20),
         ],
-      ).createShader(Rect.fromLTWH(0, h * 0.55, w, h * 0.45));
-    canvas.drawPath(wavePath1, wavePaint1);
+      ).createShader(Rect.fromLTWH(0, h * 0.68, w, h * 0.32));
+    canvas.drawPath(wave1Fill, wave1Paint);
 
-    // Wave 2 with soft highlighted border line
-    final wavePath2 = Path()
-      ..moveTo(0, h * 0.68)
-      ..cubicTo(w * 0.20, h * 0.81, w * 0.55, h * 0.88, w, h * 0.81)
+    // Rim highlight on wave 1
+    final rim1 = Path()
+      ..moveTo(0, h * 0.72)
+      ..cubicTo(w * 0.15, h * 0.78, w * 0.35, h * 0.80, w * 0.55, h * 0.76)
+      ..cubicTo(w * 0.75, h * 0.72, w * 0.90, h * 0.78, w, h * 0.82);
+    canvas.drawPath(
+      rim1,
+      Paint()
+        ..color = Colors.white.withValues(alpha: 0.70)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5,
+    );
+
+    // ── 5. Bottom wave layer 2 — middle lavender wave ──
+    final wave2Fill = Path()
+      ..moveTo(0, h * 0.79)
+      ..cubicTo(w * 0.20, h * 0.84, w * 0.45, h * 0.91, w * 0.65, h * 0.86)
+      ..cubicTo(w * 0.80, h * 0.82, w * 0.92, h * 0.86, w, h * 0.88)
       ..lineTo(w, h)
       ..lineTo(0, h)
       ..close();
 
-    final wavePaint2 = Paint()
+    final wave2Paint = Paint()
       ..shader = LinearGradient(
         begin: Alignment.centerLeft,
         end: Alignment.bottomRight,
         colors: [
           const Color(0xFFE1CEF8).withValues(alpha: 0.55),
-          const Color(0xFFF0E5FD).withValues(alpha: 0.30),
+          const Color(0xFFF0E5FD).withValues(alpha: 0.35),
         ],
-      ).createShader(Rect.fromLTWH(0, h * 0.65, w, h * 0.35));
-    canvas.drawPath(wavePath2, wavePaint2);
+      ).createShader(Rect.fromLTWH(0, h * 0.75, w, h * 0.25));
+    canvas.drawPath(wave2Fill, wave2Paint);
 
-    // Crisp subtle highlight rim on top of wave 2
-    final waveRimPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.85)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.8;
+    // Rim highlight on wave 2
+    final rim2 = Path()
+      ..moveTo(0, h * 0.79)
+      ..cubicTo(w * 0.20, h * 0.84, w * 0.45, h * 0.91, w * 0.65, h * 0.86)
+      ..cubicTo(w * 0.80, h * 0.82, w * 0.92, h * 0.86, w, h * 0.88);
+    canvas.drawPath(
+      rim2,
+      Paint()
+        ..color = Colors.white.withValues(alpha: 0.85)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.8,
+    );
 
-    final rimPath = Path()
-      ..moveTo(0, h * 0.68)
-      ..cubicTo(w * 0.20, h * 0.81, w * 0.55, h * 0.88, w, h * 0.81);
-    canvas.drawPath(rimPath, waveRimPaint);
+    // ── 6. Bottom wave layer 3 — innermost, deepest color ──
+    final wave3Fill = Path()
+      ..moveTo(0, h * 0.88)
+      ..cubicTo(w * 0.25, h * 0.92, w * 0.50, h * 0.95, w * 0.75, h * 0.91)
+      ..cubicTo(w * 0.88, h * 0.89, w * 0.95, h * 0.91, w, h * 0.93)
+      ..lineTo(w, h)
+      ..lineTo(0, h)
+      ..close();
 
-    // 4. Subtle Lime Green ambient light on bottom-right edge
-    final bottomLimePaint = Paint()
-      ..shader = RadialGradient(
-        center: const Alignment(1.1, 0.95),
-        radius: 0.7,
+    final wave3Paint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
         colors: [
-          const Color(0xFFDCF8CB).withValues(alpha: 0.60),
-          Colors.transparent,
+          const Color(0xFFDCF0CC).withValues(alpha: 0.50),
+          const Color(0xFFE3D6F8).withValues(alpha: 0.40),
         ],
-      ).createShader(Rect.fromLTWH(w * 0.4, h * 0.7, w * 0.6, h * 0.3));
-    canvas.drawRect(Rect.fromLTWH(w * 0.4, h * 0.7, w * 0.6, h * 0.3), bottomLimePaint);
+      ).createShader(Rect.fromLTWH(0, h * 0.85, w, h * 0.15));
+    canvas.drawPath(wave3Fill, wave3Paint);
+
+    // Rim on wave 3
+    final rim3 = Path()
+      ..moveTo(0, h * 0.88)
+      ..cubicTo(w * 0.25, h * 0.92, w * 0.50, h * 0.95, w * 0.75, h * 0.91)
+      ..cubicTo(w * 0.88, h * 0.89, w * 0.95, h * 0.91, w, h * 0.93);
+    canvas.drawPath(
+      rim3,
+      Paint()
+        ..color = Colors.white.withValues(alpha: 0.60)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.2,
+    );
+
+
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-/// Paints the 2 lavender sparkle ticks to the upper-left of the main logo
+// ═══════════════════════════════════════════════════════════════════
+// Left sparkle ticks (upper-left of logo)
+// ═══════════════════════════════════════════════════════════════════
 class _LeftSparklesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = const Color(0xFFBCA1EC)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3.0
+      ..strokeWidth = 2.5
       ..strokeCap = StrokeCap.round;
 
-    // Outer tick
-    canvas.drawLine(const Offset(4, 16), const Offset(12, 12), paint);
+    // Lower-left tick
+    canvas.drawLine(const Offset(4, 18), const Offset(12, 13), paint);
     // Upper tick
-    canvas.drawLine(const Offset(16, 8), const Offset(18, 0), paint);
+    canvas.drawLine(const Offset(16, 9), const Offset(19, 0), paint);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-/// Paints the small sparkle ticks near the top-right heart bubble
+// ═══════════════════════════════════════════════════════════════════
+// Right sparkle ticks (near heart bubble)
+// ═══════════════════════════════════════════════════════════════════
 class _RightHeartSparklesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -589,32 +635,34 @@ class _RightHeartSparklesPainter extends CustomPainter {
       ..strokeWidth = 2.0
       ..strokeCap = StrokeCap.round;
 
-    canvas.drawLine(const Offset(2, 10), const Offset(8, 4), paint);
-    canvas.drawLine(const Offset(10, 2), const Offset(16, 0), paint);
+    canvas.drawLine(const Offset(2, 12), const Offset(8, 5), paint);
+    canvas.drawLine(const Offset(11, 3), const Offset(17, 0), paint);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-/// Paints the double curved underline under "Brighter Days"
+// ═══════════════════════════════════════════════════════════════════
+// Double curved underline doodle (under "Brighter Days")
+// ═══════════════════════════════════════════════════════════════════
 class _UnderlineDoodlePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFC0ADE8).withValues(alpha: 0.85)
+      ..color = const Color(0xFFC0ADE8).withValues(alpha: 0.80)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.8
+      ..strokeWidth = 1.6
       ..strokeCap = StrokeCap.round;
 
     final path1 = Path()
       ..moveTo(2, 3)
-      ..quadraticBezierTo(size.width * 0.5, 6, size.width - 4, 2);
+      ..quadraticBezierTo(size.width * 0.5, 7, size.width - 4, 2);
     canvas.drawPath(path1, paint);
 
     final path2 = Path()
-      ..moveTo(8, 7.5)
-      ..quadraticBezierTo(size.width * 0.55, 10, size.width - 12, 7);
+      ..moveTo(10, 7.5)
+      ..quadraticBezierTo(size.width * 0.55, 11, size.width - 14, 7);
     canvas.drawPath(path2, paint);
   }
 

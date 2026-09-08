@@ -23,29 +23,6 @@ class CustomAppLogo extends StatelessWidget {
         alignment: Alignment.center,
         clipBehavior: Clip.none,
         children: [
-          // Ambient back pastel glow
-          Positioned.fill(
-            child: Container(
-              margin: EdgeInsets.all(size * 0.08),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(size * 0.30),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFE9D8F8).withValues(alpha: 0.8),
-                    blurRadius: size * 0.35,
-                    spreadRadius: 2,
-                    offset: Offset(0, size * 0.10),
-                  ),
-                  BoxShadow(
-                    color: const Color(0xFFC8F0B0).withValues(alpha: 0.4),
-                    blurRadius: size * 0.25,
-                    spreadRadius: 1,
-                    offset: Offset(-size * 0.06, -size * 0.06),
-                  ),
-                ],
-              ),
-            ),
-          ),
 
           // Primary Gradient Squircle Icon Tile
           Container(
