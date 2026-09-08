@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../theme/app_colors.dart';
-import '../widgets/app_logo.dart';
 
 class SplashScreen extends StatefulWidget {
   final VoidCallback? onFinished;
@@ -45,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _contentSlide = Tween<Offset>(
-      begin: const Offset(0, 0.14),
+      begin: const Offset(0, 0.12),
       end: Offset.zero,
     ).animate(
       CurvedAnimation(
@@ -91,85 +89,85 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFBFBF9),
+      backgroundColor: const Color(0xFFFAFAF7),
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isSmallScreen = constraints.maxHeight < 680;
-          final logoSize = isSmallScreen ? 94.0 : 116.0;
+          final logoSize = isSmallScreen ? 98.0 : 118.0;
           final screenH = constraints.maxHeight;
 
           return Stack(
             fit: StackFit.expand,
             children: [
-              // ── 1. Full background painter (waves, glow, connecting curves) ──
+              // ── 1. Background painter (top circular halo, connecting swoosh, silky waves) ──
               Positioned.fill(
                 child: CustomPaint(
                   painter: _SplashBackgroundPainter(),
                 ),
               ),
 
-
-              // ── 3. Upper-left floating white chat bubble (3 green dots) ──
+              // ── 2. Top-left floating frosted chat bubble (3 green dots) ──
               Positioned(
-                top: screenH * 0.18,
-                left: 30,
+                top: screenH * 0.165,
+                left: 36,
                 child: FadeTransition(
                   opacity: _decorFade,
                   child: _buildTopLeftChatBubble(),
                 ),
               ),
 
-              // ── 4. Upper-right floating heart bubble + sparkles ──
+              // ── 3. Top-right floating heart bubble + sparkles ──
               Positioned(
                 top: screenH * 0.20,
-                right: 30,
+                right: 32,
                 child: FadeTransition(
                   opacity: _decorFade,
                   child: _buildHeartBubbleWithSparkles(),
                 ),
               ),
 
-              // ── 5. Handwritten quote "Good Conversations Brighter Days" ──
+              // ── 4. Handwritten quote "Good Conversations Brighter Days" ──
               Positioned(
                 right: 28,
-                top: screenH * 0.61,
+                top: screenH * 0.625,
                 child: FadeTransition(
                   opacity: _decorFade,
                   child: Transform.rotate(
-                    angle: -8 * math.pi / 180,
+                    angle: -10 * math.pi / 180,
+                    alignment: Alignment.centerLeft,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Good',
                           style: GoogleFonts.caveat(
-                            fontSize: 26,
+                            fontSize: 27,
                             fontWeight: FontWeight.w700,
-                            color: const Color(0xFFC0ADE8).withValues(alpha: 0.80),
-                            height: 1.1,
+                            color: const Color(0xFFBCA6EA).withValues(alpha: 0.85),
+                            height: 1.05,
                           ),
                         ),
                         Text(
                           'Conversations',
                           style: GoogleFonts.caveat(
-                            fontSize: 24,
+                            fontSize: 25,
                             fontWeight: FontWeight.w700,
-                            color: const Color(0xFFC0ADE8).withValues(alpha: 0.80),
-                            height: 1.1,
+                            color: const Color(0xFFBCA6EA).withValues(alpha: 0.85),
+                            height: 1.05,
                           ),
                         ),
                         Text(
                           'Brighter Days',
                           style: GoogleFonts.caveat(
-                            fontSize: 26,
+                            fontSize: 27,
                             fontWeight: FontWeight.w700,
-                            color: const Color(0xFFC0ADE8).withValues(alpha: 0.80),
-                            height: 1.15,
+                            color: const Color(0xFFBCA6EA).withValues(alpha: 0.85),
+                            height: 1.1,
                           ),
                         ),
                         const SizedBox(height: 2),
                         CustomPaint(
-                          size: const Size(90, 10),
+                          size: const Size(88, 10),
                           painter: _UnderlineDoodlePainter(),
                         ),
                       ],
@@ -178,179 +176,175 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
               ),
 
-              // ── 6. Main centered content ──
+              // ── 5. Main centered content ──
               Positioned.fill(
                 child: SafeArea(
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Spacer(flex: 7),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Spacer(flex: 8),
 
-                          // Logo with sparkle accents
-                          Center(
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              alignment: Alignment.center,
-                              children: [
-                                // Left sparkle ticks
-                                Positioned(
-                                  left: -24,
-                                  top: -16,
-                                  child: FadeTransition(
-                                    opacity: _decorFade,
-                                    child: CustomPaint(
-                                      size: const Size(28, 28),
-                                      painter: _LeftSparklesPainter(),
-                                    ),
+                        // Logo with sparkle accents & active beacon badge
+                        Center(
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            alignment: Alignment.center,
+                            children: [
+                              // Top-left sparkle ticks
+                              Positioned(
+                                left: -22,
+                                top: -18,
+                                child: FadeTransition(
+                                  opacity: _decorFade,
+                                  child: CustomPaint(
+                                    size: const Size(26, 26),
+                                    painter: _LeftSparklesPainter(),
                                   ),
                                 ),
-                                // Main PingMe App Logo
-                                FadeTransition(
-                                  opacity: _logoFade,
-                                  child: ScaleTransition(
-                                    scale: _logoScale,
-                                    child: CustomAppLogo(
-                                      size: logoSize,
-                                      showBadge: true,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const SizedBox(height: 28),
-
-                          // Brand Name + Tagline + Accent Pill
-                          SlideTransition(
-                            position: _contentSlide,
-                            child: FadeTransition(
-                              opacity: _contentFade,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'PingMe',
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: isSmallScreen ? 32 : 38,
-                                      fontWeight: FontWeight.w800,
-                                      letterSpacing: -0.8,
-                                      color: AppColors.textPrimary,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'Fast, soft & beautifully connected',
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 14.5,
-                                      fontWeight: FontWeight.w500,
-                                      color: const Color(0xFF6E6E6E),
-                                      letterSpacing: 0.1,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 16),
-
-                                  // Signature gradient accent pill (Green → Lavender)
-                                  Container(
-                                    width: 82,
-                                    height: 7,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      gradient: const LinearGradient(
-                                        colors: [
-                                          Color(0xFFBCEFB0),
-                                          Color(0xFFE2CBF8),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
                               ),
-                            ),
+
+                              // Pixel-exact PingMe App Logo
+                              FadeTransition(
+                                opacity: _logoFade,
+                                child: ScaleTransition(
+                                  scale: _logoScale,
+                                  child: _PingMeLogo(size: logoSize),
+                                ),
+                              ),
+                            ],
                           ),
+                        ),
 
-                          const Spacer(flex: 9),
+                        const SizedBox(height: 30),
 
-                          // Bottom: gradient progress bar + E2E badge
-                          FadeTransition(
+                        // Brand Name + Tagline + Accent Pill
+                        SlideTransition(
+                          position: _contentSlide,
+                          child: FadeTransition(
                             opacity: _contentFade,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                // Gradient progress bar
-                                Container(
-                                  width: 130,
-                                  height: 5,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFE5E5E2),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: AnimatedBuilder(
-                                    animation: _progressAnimation,
-                                    builder: (context, child) {
-                                      return FractionallySizedBox(
-                                        alignment: Alignment.centerLeft,
-                                        widthFactor: _progressAnimation.value.clamp(0.0, 1.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
-                                            gradient: const LinearGradient(
-                                              colors: [
-                                                Color(0xFF55C778),
-                                                Color(0xFF5CB8E4),
-                                                Color(0xFF9F8CF1),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
+                                Text(
+                                  'PingMe',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: isSmallScreen ? 34 : 40,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: -0.8,
+                                    color: const Color(0xFF101014),
                                   ),
                                 ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  'Fast, soft & beautifully connected',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 14.5,
+                                    fontWeight: FontWeight.w500,
+                                    color: const Color(0xFF6B6B70),
+                                    letterSpacing: 0.1,
+                                  ),
+                                ),
+                                const SizedBox(height: 15),
 
-                                const SizedBox(height: 14),
-
-                                // Lock + E2E ENCRYPTED
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      Icons.lock_outline_rounded,
-                                      size: 13,
-                                      color: Color(0xFF888886),
+                                // Signature gradient accent pill
+                                Container(
+                                  width: 76,
+                                  height: 6.5,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xFFBAF1A4),
+                                        Color(0xFFD6C0F7),
+                                      ],
                                     ),
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      'E2E ENCRYPTED',
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.plusJakartaSans(
-                                        fontSize: 10.5,
-                                        fontWeight: FontWeight.w700,
-                                        letterSpacing: 1.4,
-                                        color: const Color(0xFF888886),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ],
                             ),
                           ),
+                        ),
 
-                          const SizedBox(height: 18),
-                        ],
-                      ),
+                        const Spacer(flex: 10),
+
+                        // Bottom: gradient progress bar + E2E badge
+                        FadeTransition(
+                          opacity: _contentFade,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // Gradient progress bar
+                              Container(
+                                width: 126,
+                                height: 4.5,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFE5E5E2),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: AnimatedBuilder(
+                                  animation: _progressAnimation,
+                                  builder: (context, child) {
+                                    return FractionallySizedBox(
+                                      alignment: Alignment.centerLeft,
+                                      widthFactor: _progressAnimation.value
+                                          .clamp(0.0, 1.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          gradient: const LinearGradient(
+                                            colors: [
+                                              Color(0xFF38C966),
+                                              Color(0xFF4FAAF5),
+                                              Color(0xFF9D84F5),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+
+                              const SizedBox(height: 14),
+
+                              // Lock + E2E ENCRYPTED
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.lock_outline_rounded,
+                                    size: 12.5,
+                                    color: Color(0xFF868688),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    'E2E ENCRYPTED',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 10.5,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 1.6,
+                                      color: const Color(0xFF868688),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+                      ],
                     ),
                   ),
                 ),
@@ -362,22 +356,22 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-  // ── Floating white chat bubble with 3 green dots ──
+  // ── Floating frosted chat bubble with 3 green dots ──
   Widget _buildTopLeftChatBubble() {
     return Container(
-      width: 52,
-      height: 42,
+      width: 50,
+      height: 38,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
+        color: Colors.white.withValues(alpha: 0.88),
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(18),
-          topRight: Radius.circular(18),
-          bottomRight: Radius.circular(18),
-          bottomLeft: Radius.circular(5),
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+          bottomRight: Radius.circular(16),
+          bottomLeft: Radius.circular(4),
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF89D66E).withValues(alpha: 0.14),
+            color: const Color(0xFF90DC76).withValues(alpha: 0.16),
             blurRadius: 16,
             offset: const Offset(0, 5),
           ),
@@ -388,12 +382,12 @@ class _SplashScreenState extends State<SplashScreen>
           mainAxisSize: MainAxisSize.min,
           children: List.generate(3, (index) {
             return Container(
-              width: 6,
-              height: 6,
-              margin: const EdgeInsets.symmetric(horizontal: 2),
+              width: 5.5,
+              height: 5.5,
+              margin: const EdgeInsets.symmetric(horizontal: 2.2),
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Color(0xFFA5E398),
+                color: Color(0xFFA1E392),
               ),
             );
           }),
@@ -407,7 +401,6 @@ class _SplashScreenState extends State<SplashScreen>
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        // Sparkle ticks above-right
         Positioned(
           top: -10,
           right: -10,
@@ -416,10 +409,9 @@ class _SplashScreenState extends State<SplashScreen>
             painter: _RightHeartSparklesPainter(),
           ),
         ),
-        // Heart bubble
         Container(
-          width: 50,
-          height: 40,
+          width: 48,
+          height: 38,
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.94),
             borderRadius: const BorderRadius.only(
@@ -430,7 +422,7 @@ class _SplashScreenState extends State<SplashScreen>
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFC7B1F3).withValues(alpha: 0.20),
+                color: const Color(0xFFC7B1F3).withValues(alpha: 0.22),
                 blurRadius: 14,
                 offset: const Offset(0, 4),
               ),
@@ -439,8 +431,8 @@ class _SplashScreenState extends State<SplashScreen>
           child: const Center(
             child: Icon(
               Icons.favorite_rounded,
-              size: 20,
-              color: Color(0xFFD2B5F8),
+              size: 19,
+              color: Color(0xFFC7ABF6),
             ),
           ),
         ),
@@ -450,151 +442,320 @@ class _SplashScreenState extends State<SplashScreen>
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// Background Painter — waves, connecting curves, bottom glow
+// Pixel-accurate PingMe App Logo Widget
+// ═══════════════════════════════════════════════════════════════════
+class _PingMeLogo extends StatelessWidget {
+  final double size;
+  const _PingMeLogo({required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          // ── Gradient Squircle Background ──
+          Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(size * 0.26),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFFD4F6B6), // Soft lime green
+                  Color(0xFFE7EECE),
+                  Color(0xFFEBD8FA),
+                  Color(0xFFF1D4F6), // Soft lavender pink
+                ],
+                stops: [0.0, 0.35, 0.70, 1.0],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFBFA5EF).withValues(alpha: 0.25),
+                  blurRadius: 28,
+                  offset: const Offset(0, 12),
+                ),
+              ],
+            ),
+          ),
+
+          // ── Overlapping Speech Bubbles ──
+          // Rear translucent bubble
+          Positioned(
+            right: size * 0.17,
+            top: size * 0.25,
+            child: Container(
+              width: size * 0.44,
+              height: size * 0.34,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.55),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(size * 0.13),
+                  topRight: Radius.circular(size * 0.13),
+                  bottomLeft: Radius.circular(size * 0.13),
+                  bottomRight: Radius.circular(size * 0.03),
+                ),
+              ),
+            ),
+          ),
+
+          // Front crisp white speech bubble with 3 black dots
+          Positioned(
+            left: size * 0.18,
+            bottom: size * 0.26,
+            child: Container(
+              width: size * 0.50,
+              height: size * 0.38,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(size * 0.14),
+                  topRight: Radius.circular(size * 0.14),
+                  bottomRight: Radius.circular(size * 0.14),
+                  bottomLeft: Radius.circular(size * 0.03),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(3, (index) {
+                    return Container(
+                      width: size * 0.062,
+                      height: size * 0.062,
+                      margin: EdgeInsets.symmetric(horizontal: size * 0.016),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF141416),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+            ),
+          ),
+
+          // ── Top-Right Active Notification Badge (Green beacon ring) ──
+          Positioned(
+            top: -size * 0.03,
+            right: -size * 0.03,
+            child: Container(
+              width: size * 0.31,
+              height: size * 0.31,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF38C722).withValues(alpha: 0.30),
+                    blurRadius: 12,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              padding: EdgeInsets.all(size * 0.035),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: const Color(0xFF3CD124),
+                    width: size * 0.035,
+                  ),
+                ),
+                child: Center(
+                  child: Container(
+                    width: size * 0.09,
+                    height: size * 0.09,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF3CD124),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Background Painter — Top halo, connecting line, flowing silk waves
 // ═══════════════════════════════════════════════════════════════════
 class _SplashBackgroundPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
+    final full = Rect.fromLTWH(0, 0, w, h);
 
-    // ── 1. Soft lime-green ambient glow (top-left quadrant) ──
-    final limePaint = Paint()
-      ..shader = const RadialGradient(
-        center: Alignment(-0.75, -0.75),
-        radius: 0.70,
+    // ── 1. Top-Left Lime Circular Halo with Contoured Edge ──
+    final haloCenter = Offset(w * 0.16, h * 0.06);
+    final haloRadius = w * 0.72;
+
+    final haloFillPaint = Paint()
+      ..shader = RadialGradient(
+        center: Alignment.center,
+        radius: 0.95,
         colors: [
-          Color(0x35C8F0B0),
-          Color(0x18C8F0B0),
-          Color(0x00C8F0B0),
+          const Color(0xFFD6F5BD).withValues(alpha: 0.70),
+          const Color(0xFFE4F8CD).withValues(alpha: 0.45),
+          const Color(0xFFEDFBE0).withValues(alpha: 0.20),
+          Colors.transparent,
         ],
-        stops: [0.0, 0.50, 1.0],
-      ).createShader(Rect.fromLTWH(0, 0, w, h));
-    canvas.drawRect(Rect.fromLTWH(0, 0, w, h), limePaint);
+        stops: const [0.0, 0.45, 0.80, 1.0],
+      ).createShader(Rect.fromCircle(center: haloCenter, radius: haloRadius));
+    canvas.drawCircle(haloCenter, haloRadius, haloFillPaint);
 
-    // ── 2. Connecting curve — left bubble to center ──
-    final arcPaintLeft = Paint()
-      ..color = const Color(0xFFBFECA3).withValues(alpha: 0.50)
+    // Delicate translucent white rim defining the top halo
+    final haloRimPaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.70)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
+      ..strokeWidth = 1.6;
+    canvas.drawCircle(haloCenter, haloRadius, haloRimPaint);
 
-    final arcLeft = Path()
-      ..moveTo(w * 0.10, h * 0.22)
-      ..quadraticBezierTo(w * 0.28, h * 0.26, w * 0.45, h * 0.33);
-    canvas.drawPath(arcLeft, arcPaintLeft);
-
-    // ── 3. Connecting curve — center to right bubble ──
-    final arcPaintRight = Paint()
-      ..color = const Color(0xFFDDD2F5).withValues(alpha: 0.42)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
-
+    // ── 2. Graceful connecting curved line ──
     final arcRight = Path()
-      ..moveTo(w * 0.55, h * 0.33)
-      ..quadraticBezierTo(w * 0.76, h * 0.27, w * 0.92, h * 0.22);
-    canvas.drawPath(arcRight, arcPaintRight);
+      ..moveTo(w * 0.95, h * 0.24)
+      ..cubicTo(w * 0.75, h * 0.29, w * 0.48, h * 0.335, w * 0.12, h * 0.36);
+    canvas.drawPath(
+      arcRight,
+      Paint()
+        ..color = const Color(0xFFD7C7F6).withValues(alpha: 0.40)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.1
+        ..strokeCap = StrokeCap.round,
+    );
 
-    // ── 4. Bottom wave layer 1 — outermost, lightest, enters from left ──
-    final wave1Fill = Path()
-      ..moveTo(0, h * 0.72)
-      ..cubicTo(w * 0.15, h * 0.78, w * 0.35, h * 0.80, w * 0.55, h * 0.76)
-      ..cubicTo(w * 0.75, h * 0.72, w * 0.90, h * 0.78, w, h * 0.82)
+    final rimWidth = w * 0.0035;
+
+    // ── 3. Wave 1: Soft upper lavender wave ──
+    final wave1Top = Path()
+      ..moveTo(0, h * 0.62)
+      ..cubicTo(w * 0.18, h * 0.66, w * 0.32, h * 0.78, w * 0.52, h * 0.84)
+      ..cubicTo(w * 0.70, h * 0.89, w * 0.88, h * 0.88, w, h * 0.91);
+
+    final wave1Fill = Path.from(wave1Top)
       ..lineTo(w, h)
       ..lineTo(0, h)
       ..close();
 
-    final wave1Paint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          const Color(0xFFD8F5C8).withValues(alpha: 0.40),
-          const Color(0xFFE8DBFA).withValues(alpha: 0.35),
-          const Color(0xFFF3EDFD).withValues(alpha: 0.20),
-        ],
-      ).createShader(Rect.fromLTWH(0, h * 0.68, w, h * 0.32));
-    canvas.drawPath(wave1Fill, wave1Paint);
-
-    // Rim highlight on wave 1
-    final rim1 = Path()
-      ..moveTo(0, h * 0.72)
-      ..cubicTo(w * 0.15, h * 0.78, w * 0.35, h * 0.80, w * 0.55, h * 0.76)
-      ..cubicTo(w * 0.75, h * 0.72, w * 0.90, h * 0.78, w, h * 0.82);
     canvas.drawPath(
-      rim1,
+      wave1Fill,
       Paint()
-        ..color = Colors.white.withValues(alpha: 0.70)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.5,
+        ..shader = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFFF3EBFC).withValues(alpha: 0.55),
+            const Color(0xFFE4D3F9).withValues(alpha: 0.45),
+          ],
+        ).createShader(full),
     );
 
-    // ── 5. Bottom wave layer 2 — middle lavender wave ──
-    final wave2Fill = Path()
-      ..moveTo(0, h * 0.79)
-      ..cubicTo(w * 0.20, h * 0.84, w * 0.45, h * 0.91, w * 0.65, h * 0.86)
-      ..cubicTo(w * 0.80, h * 0.82, w * 0.92, h * 0.86, w, h * 0.88)
+    // ── 4. Wave 2: Middle layered lavender ribbon ──
+    final wave2Top = Path()
+      ..moveTo(0, h * 0.705)
+      ..cubicTo(w * 0.16, h * 0.705, w * 0.28, h * 0.815, w * 0.45, h * 0.875)
+      ..cubicTo(w * 0.62, h * 0.930, w * 0.78, h * 0.900, w, h * 0.945);
+
+    final wave2Fill = Path.from(wave2Top)
       ..lineTo(w, h)
       ..lineTo(0, h)
       ..close();
 
-    final wave2Paint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.centerLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          const Color(0xFFE1CEF8).withValues(alpha: 0.55),
-          const Color(0xFFF0E5FD).withValues(alpha: 0.35),
-        ],
-      ).createShader(Rect.fromLTWH(0, h * 0.75, w, h * 0.25));
-    canvas.drawPath(wave2Fill, wave2Paint);
-
-    // Rim highlight on wave 2
-    final rim2 = Path()
-      ..moveTo(0, h * 0.79)
-      ..cubicTo(w * 0.20, h * 0.84, w * 0.45, h * 0.91, w * 0.65, h * 0.86)
-      ..cubicTo(w * 0.80, h * 0.82, w * 0.92, h * 0.86, w, h * 0.88);
     canvas.drawPath(
-      rim2,
+      wave2Fill,
       Paint()
-        ..color = Colors.white.withValues(alpha: 0.85)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.8,
+        ..shader = LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFFE8DAFA).withValues(alpha: 0.50),
+            const Color(0xFFDCBEF8).withValues(alpha: 0.38),
+          ],
+        ).createShader(full),
     );
 
-    // ── 6. Bottom wave layer 3 — innermost, deepest color ──
-    final wave3Fill = Path()
-      ..moveTo(0, h * 0.88)
-      ..cubicTo(w * 0.25, h * 0.92, w * 0.50, h * 0.95, w * 0.75, h * 0.91)
-      ..cubicTo(w * 0.88, h * 0.89, w * 0.95, h * 0.91, w, h * 0.93)
+    // ── 5. Wave 3: Bottom-Right Lime Green Swell ──
+    final greenTop = Path()
+      ..moveTo(w * 0.48, h)
+      ..cubicTo(w * 0.60, h * 0.91, w * 0.76, h * 0.81, w * 0.90, h * 0.78)
+      ..cubicTo(w * 0.94, h * 0.775, w * 0.97, h * 0.78, w, h * 0.785);
+
+    final greenFill = Path.from(greenTop)
+      ..lineTo(w, h)
+      ..close();
+
+    canvas.drawPath(
+      greenFill,
+      Paint()
+        ..shader = LinearGradient(
+          begin: const Alignment(0.7, 0.4),
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFFD6F6BE).withValues(alpha: 0.58),
+            const Color(0xFFE6F8CE).withValues(alpha: 0.45),
+          ],
+        ).createShader(full),
+    );
+
+    // ── 6. Wave 4: Lowest sheer lavender veil ──
+    final wave4Top = Path()
+      ..moveTo(0, h * 0.80)
+      ..cubicTo(w * 0.22, h * 0.83, w * 0.48, h * 0.97, w * 0.78, h * 0.95)
+      ..cubicTo(w * 0.88, h * 0.94, w * 0.95, h * 0.96, w, h * 0.975);
+
+    final wave4Fill = Path.from(wave4Top)
       ..lineTo(w, h)
       ..lineTo(0, h)
       ..close();
 
-    final wave3Paint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
-        colors: [
-          const Color(0xFFDCF0CC).withValues(alpha: 0.50),
-          const Color(0xFFE3D6F8).withValues(alpha: 0.40),
-        ],
-      ).createShader(Rect.fromLTWH(0, h * 0.85, w, h * 0.15));
-    canvas.drawPath(wave3Fill, wave3Paint);
-
-    // Rim on wave 3
-    final rim3 = Path()
-      ..moveTo(0, h * 0.88)
-      ..cubicTo(w * 0.25, h * 0.92, w * 0.50, h * 0.95, w * 0.75, h * 0.91)
-      ..cubicTo(w * 0.88, h * 0.89, w * 0.95, h * 0.91, w, h * 0.93);
     canvas.drawPath(
-      rim3,
+      wave4Fill,
       Paint()
-        ..color = Colors.white.withValues(alpha: 0.60)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.2,
+        ..shader = LinearGradient(
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+          colors: [
+            const Color(0xFFEADDF9).withValues(alpha: 0.45),
+            const Color(0xFFD7C0F4).withValues(alpha: 0.30),
+          ],
+        ).createShader(full),
     );
 
+    // ── 7. Soft silk highlights along the wave crests ──
+    final rimPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = rimWidth
+      ..color = Colors.white.withValues(alpha: 0.75);
 
+    canvas.drawPath(wave1Top, rimPaint);
+    canvas.drawPath(
+      wave2Top,
+      rimPaint..color = Colors.white.withValues(alpha: 0.55),
+    );
+    canvas.drawPath(
+      greenTop,
+      rimPaint..color = Colors.white.withValues(alpha: 0.80),
+    );
+    canvas.drawPath(
+      wave4Top,
+      rimPaint..color = Colors.white.withValues(alpha: 0.40),
+    );
   }
 
   @override
@@ -602,21 +763,21 @@ class _SplashBackgroundPainter extends CustomPainter {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// Left sparkle ticks (upper-left of logo)
+// Left Sparkle Ticks (upper-left of logo)
 // ═══════════════════════════════════════════════════════════════════
 class _LeftSparklesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFBCA1EC)
+      ..color = const Color(0xFFB99FEC)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.5
+      ..strokeWidth = 2.4
       ..strokeCap = StrokeCap.round;
 
     // Lower-left tick
-    canvas.drawLine(const Offset(4, 18), const Offset(12, 13), paint);
+    canvas.drawLine(const Offset(3, 17), const Offset(11, 12), paint);
     // Upper tick
-    canvas.drawLine(const Offset(16, 9), const Offset(19, 0), paint);
+    canvas.drawLine(const Offset(15, 8), const Offset(18, 0), paint);
   }
 
   @override
@@ -624,19 +785,19 @@ class _LeftSparklesPainter extends CustomPainter {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// Right sparkle ticks (near heart bubble)
+// Right Sparkle Ticks (near heart bubble)
 // ═══════════════════════════════════════════════════════════════════
 class _RightHeartSparklesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFCBB6F2)
+      ..color = const Color(0xFFC7B1F3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0
       ..strokeCap = StrokeCap.round;
 
-    canvas.drawLine(const Offset(2, 12), const Offset(8, 5), paint);
-    canvas.drawLine(const Offset(11, 3), const Offset(17, 0), paint);
+    canvas.drawLine(const Offset(2, 11), const Offset(7, 5), paint);
+    canvas.drawLine(const Offset(10, 3), const Offset(16, 0), paint);
   }
 
   @override
@@ -644,25 +805,25 @@ class _RightHeartSparklesPainter extends CustomPainter {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// Double curved underline doodle (under "Brighter Days")
+// Double Curved Underline Doodle (under "Brighter Days")
 // ═══════════════════════════════════════════════════════════════════
 class _UnderlineDoodlePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFC0ADE8).withValues(alpha: 0.80)
+      ..color = const Color(0xFFBCA6EA).withValues(alpha: 0.85)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.6
       ..strokeCap = StrokeCap.round;
 
     final path1 = Path()
       ..moveTo(2, 3)
-      ..quadraticBezierTo(size.width * 0.5, 7, size.width - 4, 2);
+      ..quadraticBezierTo(size.width * 0.5, 7.5, size.width - 2, 2.5);
     canvas.drawPath(path1, paint);
 
     final path2 = Path()
-      ..moveTo(10, 7.5)
-      ..quadraticBezierTo(size.width * 0.55, 11, size.width - 14, 7);
+      ..moveTo(12, 7.5)
+      ..quadraticBezierTo(size.width * 0.58, 11.5, size.width - 12, 7);
     canvas.drawPath(path2, paint);
   }
 
