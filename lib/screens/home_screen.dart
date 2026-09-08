@@ -448,164 +448,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildActiveStoriesBar(PingMeThemeColors colors) {
-    final activeUsers = _allChats.where((c) => c.isOnline).toList();
-    final isDark = colors.isDark;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            'Online Now',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: colors.textSecondary,
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          height: 82,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: activeUsers.length + 1,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                // Your Story / Ping
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 54,
-                        height: 54,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: colors.surface,
-                          border: Border.all(
-                            color: colors.border,
-                            width: 1.5,
-                          ),
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.add_rounded,
-                            color: colors.textPrimary,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        'Your Ping',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: colors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }
-
-              final user = activeUsers[index - 1];
-              final avatarBg = AppColors.adaptAvatarBg(user.avatarBgColor, isDark);
-              final avatarFg = AppColors.adaptAvatarFg(user.avatarBgColor, isDark);
-
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6),
-                child: GestureDetector(
-                  onTap: () => _openChat(user),
-                  child: Column(
-                    children: [
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Container(
-                            width: 54,
-                            height: 54,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: avatarBg,
-                              border: Border.all(
-                                color: isDark
-                                    ? AppColors.darkSurface
-                                    : Colors.white,
-                                width: 2,
-                              ),
-                              boxShadow: isDark
-                                  ? []
-                                  : [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.04),
-                                        blurRadius: 6,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                            ),
-                            child: Center(
-                              child: Text(
-                                user.avatarInitials,
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 15,
-                                  color: avatarFg,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 1,
-                            right: 1,
-                            child: Container(
-                              width: 14,
-                              height: 14,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: colors.onlineDot,
-                                border: Border.all(
-                                  color: isDark
-                                      ? AppColors.darkSurface
-                                      : Colors.white,
-                                  width: 2.2,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      SizedBox(
-                        width: 60,
-                        child: Text(
-                          user.name.split(' ').first,
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.plusJakartaSans(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: colors.textPrimary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildChatCard(ChatSummary chat, PingMeThemeColors colors) {
     final isDark = colors.isDark;
     final avatarBg = AppColors.adaptAvatarBg(chat.avatarBgColor, isDark);
@@ -930,17 +772,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  /// Tab 0: Chats (Stories + Chat List)
+  /// Tab 0: Chats (Chat List)
   Widget _buildChatsTab(PingMeThemeColors colors) {
     return ListView(
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(vertical: 14),
       children: [
-        // Active Contacts / Stories Bar
-        _buildActiveStoriesBar(colors),
-
-        const SizedBox(height: 12),
-
         // Chats Section Header
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
