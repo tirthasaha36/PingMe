@@ -89,7 +89,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAF7),
+      backgroundColor: const Color(0xFFF7F7F3),
       body: LayoutBuilder(
         builder: (context, constraints) {
           final isSmallScreen = constraints.maxHeight < 680;
@@ -467,16 +467,16 @@ class _PingMeLogo extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Color(0xFFD4F6B6), // Soft lime green
-                  Color(0xFFE7EECE),
-                  Color(0xFFEBD8FA),
-                  Color(0xFFF1D4F6), // Soft lavender pink
+                  Color(0xFFC8F0A7), // Delicate vibrant lime
+                  Color(0xFFE2ECC4),
+                  Color(0xFFE5D0F9),
+                  Color(0xFFECC9F3), // Soft lavender pink
                 ],
                 stops: [0.0, 0.35, 0.70, 1.0],
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFBFA5EF).withValues(alpha: 0.25),
+                  color: const Color(0xFFB898EE).withValues(alpha: 0.28),
                   blurRadius: 28,
                   offset: const Offset(0, 12),
                 ),
@@ -603,17 +603,17 @@ class _SplashBackgroundPainter extends CustomPainter {
     final full = Rect.fromLTWH(0, 0, w, h);
 
     // ── 1. Top-Left Lime Circular Halo with Contoured Edge ──
-    final haloCenter = Offset(w * 0.16, h * 0.06);
-    final haloRadius = w * 0.72;
+    final haloCenter = Offset(w * 0.12, h * 0.05);
+    final haloRadius = w * 0.56;
 
     final haloFillPaint = Paint()
       ..shader = RadialGradient(
         center: Alignment.center,
         radius: 0.95,
         colors: [
-          const Color(0xFFD6F5BD).withValues(alpha: 0.70),
-          const Color(0xFFE4F8CD).withValues(alpha: 0.45),
-          const Color(0xFFEDFBE0).withValues(alpha: 0.20),
+          const Color(0xFFCBF1AC).withValues(alpha: 0.76),
+          const Color(0xFFDAF5BE).withValues(alpha: 0.52),
+          const Color(0xFFE7F9D6).withValues(alpha: 0.25),
           Colors.transparent,
         ],
         stops: const [0.0, 0.45, 0.80, 1.0],
@@ -634,9 +634,9 @@ class _SplashBackgroundPainter extends CustomPainter {
     canvas.drawPath(
       arcRight,
       Paint()
-        ..color = const Color(0xFFD7C7F6).withValues(alpha: 0.40)
+        ..color = const Color(0xFFCBB8F5).withValues(alpha: 0.48)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.1
+        ..strokeWidth = 1.15
         ..strokeCap = StrokeCap.round,
     );
 
@@ -660,8 +660,8 @@ class _SplashBackgroundPainter extends CustomPainter {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFFF3EBFC).withValues(alpha: 0.55),
-            const Color(0xFFE4D3F9).withValues(alpha: 0.45),
+            const Color(0xFFEBDCFB).withValues(alpha: 0.64),
+            const Color(0xFFDCC3F8).withValues(alpha: 0.54),
           ],
         ).createShader(full),
     );
@@ -684,8 +684,8 @@ class _SplashBackgroundPainter extends CustomPainter {
           begin: Alignment.centerLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFFE8DAFA).withValues(alpha: 0.50),
-            const Color(0xFFDCBEF8).withValues(alpha: 0.38),
+            const Color(0xFFDFCCF8).withValues(alpha: 0.58),
+            const Color(0xFFD1AFF6).withValues(alpha: 0.45),
           ],
         ).createShader(full),
     );
@@ -707,8 +707,8 @@ class _SplashBackgroundPainter extends CustomPainter {
           begin: const Alignment(0.7, 0.4),
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFFD6F6BE).withValues(alpha: 0.58),
-            const Color(0xFFE6F8CE).withValues(alpha: 0.45),
+            const Color(0xFFCAF4AB).withValues(alpha: 0.66),
+            const Color(0xFFDEF7C0).withValues(alpha: 0.52),
           ],
         ).createShader(full),
     );
@@ -731,8 +731,8 @@ class _SplashBackgroundPainter extends CustomPainter {
           begin: Alignment.bottomLeft,
           end: Alignment.topRight,
           colors: [
-            const Color(0xFFEADDF9).withValues(alpha: 0.45),
-            const Color(0xFFD7C0F4).withValues(alpha: 0.30),
+            const Color(0xFFE2D1F8).withValues(alpha: 0.52),
+            const Color(0xFFCDB0F3).withValues(alpha: 0.38),
           ],
         ).createShader(full),
     );
