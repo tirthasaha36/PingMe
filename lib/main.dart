@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'screens/home_screen.dart';
 import 'screens/splash_screen.dart';
+import 'theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,17 +21,37 @@ class PingMeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Chatter',
+      title: 'PingMe',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFFBF8F3),
-      ),
-      home: SplashScreen(
-        onFinished: () {
-          // Ready for next screen: WelcomeScreen / Onboarding
-        },
-      ),
+      theme: AppTheme.lightTheme,
+      home: const SplashOrHomeWrapper(),
     );
+  }
+}
+
+class SplashOrHomeWrapper extends StatefulWidget {
+  const SplashOrHomeWrapper({super.key});
+
+  @override
+  State<SplashOrHomeWrapper> createState() => _SplashOrHomeWrapperState();
+}
+
+class _SplashOrHomeWrapperState extends State<SplashOrHomeWrapper> {
+  bool _showSplash = true;
+
+  @override
+  Widget build(BuildContext context) {
+    if (_showSplash) {
+      return SplashScreen(
+        onFinished: () {
+          if (mounted) {
+            setState(() {
+              _showSplash = false;
+            });
+          }
+        },
+      );
+    }
+    return const HomeScreen();
   }
 }

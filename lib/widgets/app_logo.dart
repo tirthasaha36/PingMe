@@ -1,155 +1,207 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
+/// A brand logo for PingMe featuring the signature pastel brand gradient:
+/// Lime Green (#C8F0B0) -> Lavender (#E9D8F8) -> Soft Pink (#F7DFF3).
+/// Includes layered speech glyphs, soft diffusion glow, and active presence ping.
 class CustomAppLogo extends StatelessWidget {
   final double size;
-  const CustomAppLogo({super.key, this.size = 110});
+  final bool showBadge;
+
+  const CustomAppLogo({
+    super.key,
+    this.size = 100,
+    this.showBadge = true,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        // Whimsical spark accent top right
-        Positioned(
-          top: 0,
-          right: 4,
-          child: CustomPaint(
-            size: const Size(26, 26),
-            painter: _RaysPainter(),
-          ),
-        ),
-        // Main rounded squircle
-        Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            color: const Color(0xFF907AFE), // Vibrant soft periwinkle purple
-            borderRadius: BorderRadius.circular(size * 0.32),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF907AFE).withValues(alpha: 0.38),
-                blurRadius: 22,
-                offset: const Offset(0, 10),
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        alignment: Alignment.center,
+        clipBehavior: Clip.none,
+        children: [
+          // Ambient back pastel glow
+          Positioned.fill(
+            child: Container(
+              margin: EdgeInsets.all(size * 0.08),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(size * 0.30),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFE9D8F8).withValues(alpha: 0.8),
+                    blurRadius: size * 0.35,
+                    spreadRadius: 2,
+                    offset: Offset(0, size * 0.10),
+                  ),
+                  BoxShadow(
+                    color: const Color(0xFFC8F0B0).withValues(alpha: 0.4),
+                    blurRadius: size * 0.25,
+                    spreadRadius: 1,
+                    offset: Offset(-size * 0.06, -size * 0.06),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-          alignment: Alignment.center,
-          child: CustomPaint(
-            size: Size(size * 0.58, size * 0.58),
-            painter: _WinkingBubblePainter(),
+
+          // Primary Gradient Squircle Icon Tile
+          Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              gradient: AppColors.brandGradient,
+              borderRadius: BorderRadius.circular(size * 0.28),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.8),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.06),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: CustomPaint(
+              painter: _PingMeGlyphPainter(),
+            ),
           ),
-        ),
-      ],
+
+          // Active "Ping" Status Indicator
+          if (showBadge)
+            Positioned(
+              top: -size * 0.03,
+              right: -size * 0.03,
+              child: Container(
+                width: size * 0.28,
+                height: size * 0.28,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.onlineDot,
+                  border: Border.all(
+                    color: Colors.white,
+                    width: size * 0.035,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.onlineDot.withValues(alpha: 0.45),
+                      blurRadius: 8,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Container(
+                    width: size * 0.09,
+                    height: size * 0.09,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
 
-class _WinkingBubblePainter extends CustomPainter {
+class _PingMeGlyphPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
+    final w = size.width;
+    final h = size.height;
+
+    // 1. Frosted upper sheen
+    final sheenPaint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Colors.white.withValues(alpha: 0.4),
+          Colors.white.withValues(alpha: 0.0),
+        ],
+      ).createShader(Rect.fromLTWH(0, 0, w, h * 0.55));
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, w, h * 0.52),
+        Radius.circular(w * 0.28),
+      ),
+      sheenPaint,
+    );
+
+    // 2. Secondary/Back speech bubble (clean soft translucent white)
+    final backBubblePaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.55)
+      ..style = PaintingStyle.fill;
+
+    final backRRect = RRect.fromRectAndRadius(
+      Rect.fromCenter(
+        center: Offset(w * 0.60, h * 0.42),
+        width: w * 0.44,
+        height: h * 0.36,
+      ),
+      Radius.circular(w * 0.14),
+    );
+    canvas.drawRRect(backRRect, backBubblePaint);
+
+    // 3. Primary Front Chat Bubble (Crisp Solid White with delicate shadow)
+    final frontBubblePaint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.fill;
 
-    // Draw smooth organic rounded speech bubble
-    final rrect = RRect.fromRectAndRadius(
-      Rect.fromCenter(
-        center: Offset(size.width * 0.50, size.height * 0.48),
-        width: size.width * 0.88,
-        height: size.height * 0.80,
-      ),
-      Radius.circular(size.width * 0.38),
+    final shadowPaint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.08)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+
+    final frontRect = Rect.fromCenter(
+      center: Offset(w * 0.44, h * 0.56),
+      width: w * 0.52,
+      height: h * 0.42,
+    );
+    final frontRRect = RRect.fromRectAndRadius(
+      frontRect,
+      Radius.circular(w * 0.16),
     );
 
-    final path = Path()..addRRect(rrect);
-
-    // Cute curved speech tail at bottom-left
+    // Rounded speech tail
     final tailPath = Path()
-      ..moveTo(size.width * 0.28, size.height * 0.76)
+      ..moveTo(frontRect.left + w * 0.08, frontRect.bottom - h * 0.02)
+      ..lineTo(frontRect.left - w * 0.04, frontRect.bottom + h * 0.07)
       ..quadraticBezierTo(
-        size.width * 0.14,
-        size.height * 0.88,
-        size.width * 0.08,
-        size.height * 0.96,
-      )
-      ..quadraticBezierTo(
-        size.width * 0.24,
-        size.height * 0.90,
-        size.width * 0.44,
-        size.height * 0.82,
+        frontRect.left + w * 0.02,
+        frontRect.bottom + h * 0.04,
+        frontRect.left + w * 0.18,
+        frontRect.bottom,
       )
       ..close();
 
-    path.addPath(tailPath, Offset.zero);
-    canvas.drawPath(path, paint);
+    final fullFrontPath = Path()
+      ..addRRect(frontRRect)
+      ..addPath(tailPath, Offset.zero);
 
-    // Face ink
-    final eyePaint = Paint()
-      ..color = const Color(0xFF231C3D)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.075
-      ..strokeCap = StrokeCap.round;
+    canvas.drawPath(fullFrontPath.shift(Offset(0, h * 0.02)), shadowPaint);
+    canvas.drawPath(fullFrontPath, frontBubblePaint);
 
-    final fillInk = Paint()
-      ..color = const Color(0xFF231C3D)
+    // 4. Three minimal dark dots inside front bubble (AppColors.textPrimary)
+    final dotPaint = Paint()
+      ..color = const Color(0xFF111111)
       ..style = PaintingStyle.fill;
 
-    // Left eye (wink - cute curved line `⌒`)
-    final leftWink = Path()
-      ..moveTo(size.width * 0.30, size.height * 0.50)
-      ..quadraticBezierTo(
-        size.width * 0.40,
-        size.height * 0.40,
-        size.width * 0.48,
-        size.height * 0.49,
-      );
-    canvas.drawPath(leftWink, eyePaint);
+    final dotY = frontRect.center.dy;
+    final dotSpacing = w * 0.10;
+    final dotRadius = w * 0.032;
 
-    // Right eye (solid happy dot)
-    canvas.drawCircle(
-      Offset(size.width * 0.68, size.height * 0.46),
-      size.width * 0.075,
-      fillInk,
-    );
-
-    // Cute open smile (curved bottom)
-    final mouthPath = Path()
-      ..moveTo(size.width * 0.45, size.height * 0.58)
-      ..quadraticBezierTo(
-        size.width * 0.55,
-        size.height * 0.74,
-        size.width * 0.65,
-        size.height * 0.58,
-      )
-      ..close();
-    canvas.drawPath(mouthPath, fillInk);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class _RaysPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rayPaint = Paint()
-      ..color = const Color(0xFF907AFE)
-      ..strokeWidth = 3.2
-      ..strokeCap = StrokeCap.round;
-
-    // Ray 1
-    canvas.drawLine(
-      Offset(size.width * 0.3, size.height * 0.8),
-      Offset(size.width * 0.7, size.height * 0.4),
-      rayPaint,
-    );
-    // Ray 2
-    canvas.drawLine(
-      Offset(size.width * 0.8, size.height * 0.9),
-      Offset(size.width * 1.0, size.height * 0.7),
-      rayPaint,
-    );
+    canvas.drawCircle(Offset(frontRect.center.dx - dotSpacing, dotY), dotRadius, dotPaint);
+    canvas.drawCircle(Offset(frontRect.center.dx, dotY), dotRadius, dotPaint);
+    canvas.drawCircle(Offset(frontRect.center.dx + dotSpacing, dotY), dotRadius, dotPaint);
   }
 
   @override
